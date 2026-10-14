@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+<defs>
+  <linearGradient id="g-ph-05-svg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#12052e"/><stop offset="1" stop-color="#6d28d9"/></linearGradient>
+  <radialGradient id="r-ph-05-svg" cx="0.64" cy="0.34" r=".7"><stop offset="0" stop-color="#c4b5fd" stop-opacity=".55"/><stop offset="1" stop-color="#c4b5fd" stop-opacity="0"/></radialGradient>
+  <pattern id="p-ph-05-svg" width="28" height="28" patternUnits="userSpaceOnUse"><circle cx="1.5" cy="1.5" r="1.2" fill="#ffffff" opacity=".10"/></pattern>
+</defs>
+<rect width="1200" height="800" fill="url(#g-ph-05-svg)"/>
+<rect width="1200" height="800" fill="url(#r-ph-05-svg)"/>
+<rect x="427" y="23" width="147" height="147" rx="18" fill="#c4b5fd" opacity="0.06" transform="rotate(-14 427 23)"/>
+<line x1="537" y1="750" x2="-80" y2="837" stroke="#c4b5fd" stroke-width="2" opacity="0.22"/>
+<circle cx="564" cy="270" r="316" fill="none" stroke="#c4b5fd" stroke-width="25" opacity="0.14"/>
+<circle cx="575" cy="522" r="82" fill="#c4b5fd" opacity="0.19"/>
+<circle cx="1092" cy="626" r="167" fill="#c4b5fd" opacity="0.18"/>
+<circle cx="521" cy="509" r="307" fill="none" stroke="#c4b5fd" stroke-width="29" opacity="0.07"/>
+<rect x="482" y="757" width="121" height="121" rx="14" fill="#c4b5fd" opacity="0.18" transform="rotate(-22 482 757)"/>
+<rect width="1200" height="800" fill="url(#p-ph-05-svg)"/>
+<text x="1182" y="782" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="16" font-weight="700" letter-spacing="2" fill="#ffffff" opacity=".35">FOTO 05 · SUBSTITUIR</text>
+</svg>

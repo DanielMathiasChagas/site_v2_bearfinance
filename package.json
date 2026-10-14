@@ -1,0 +1,13 @@
+{
+  "name": "bearfinance-site",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Site institucional Bear Finance",
+  "scripts": {
+    "build": "node src/build.js",
+    "start": "node server.js",
+    "dev": "node src/build.js && node server.js"
+  },
+  "engines": { "node": ">=18" }
+}
