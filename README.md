@@ -1,61 +1,56 @@
-# Bear Finance — site institucional
+# Bear Finance — site institucional (v2)
 
-Site estático gerado por Node (sem dependências de build) + servidor com API de formulários.
-Estrutura, seções, proporções e movimento seguem o modelo de referência (planning.com.br);
-paleta, textos, imagens e vídeos são da Bear Finance.
+Site estático gerado por Node (sem dependências de produção) + servidor com API de formulários.
+Arquitetura de informação do modelo de referência mantida; identidade visual, conteúdo e engenharia
+próprios (ver `docs/design/design-system.md`).
 
 ```bash
-npm run dev      # gera /public e sobe em http://localhost:3000
-npm run build    # só gera /public
-npm start        # só sobe o servidor (PORT=3000 por padrão)
+npm ci             # ferramentas de teste (playwright-core, lighthouse, axe-core)
+npm run build      # gera /public
+npm start          # sobe o servidor (PORT=3000 por padrão)
+npm run dev        # build + servidor
+npm test           # testes do servidor (node --test)
+node --test tests/e2e/      # E2E com o Chrome instalado (precisa do servidor em PORT=3300)
+node scripts/shots.mjs docs/qa/screenshots/depois   # varredura: overflow, console, screenshots (servidor em 3100)
+node src/make-art.mjs       # regenera as ilustrações SVG (determinístico)
+node scripts/contact-sheet.mjs saida.png             # folha de contato das ilustrações
 ```
 
 ## Onde editar
 
 | O quê | Arquivo |
 |---|---|
-| Textos, serviços, verticais, FAQ, artigos, vagas, cases, sócios | `src/data.js` |
+| Textos, serviços, segmentos, FAQ, artigos, cases, parcerias, SEO por página | `src/data.js` (itens a confirmar marcados `[A CONFIRMAR]`) |
 | Vídeos (ID do YouTube por página) | `src/data.js` → `videos` e `services[].video` |
-| Vídeo de fundo do topo (.mp4) | `src/data.js` → `site.heroVideo` |
-| Layout e páginas | `src/build.js` |
-| Estilos (paleta no `:root`) | `src/assets/css/site.css` |
-| Comportamentos (menu, carrosséis, FAQ, vídeos, formulários) | `src/assets/js/site.js` |
-| Imagens | `src/assets/img/` |
+| Layout, páginas e componentes | `src/build.js` |
+| Design system (tokens no `:root`) | `src/assets/css/site.css` |
+| Comportamentos (menu, FAQ, abas, formulários, carrossel, ondas) | `src/assets/js/site.js` |
+| Mapa neural do Brasil | `src/assets/js/brmap.js` (lê `window.BR_GEO` gerado de `src/brazil-geo.js`) |
+| Ícones SVG inline | `src/icons.js` |
+| Ilustrações | `src/make-art.mjs` → `src/assets/img/art/` |
+| Servidor e API | `server.js` (+ `.env.example`) |
 
 `public/` é gerado; não edite à mão.
 
-## Imagens e vídeos provisórios
+## Conteúdo provisório
 
-- As imagens `ph-01.svg` … `ph-12.svg`, `hero.svg` e `avatar.svg` são **placeholders** gerados por
-  `python3 -I src/make-placeholders.py`. Troque pelos arquivos reais mantendo o nome, ou aponte novos
-  nomes em `src/data.js`.
-- Cada foto provisória exibe a etiqueta "FOTO · substituir". Para escondê-la sem trocar as imagens,
-  defina `placeholderLabels: false` em `src/data.js`.
-- Todo bloco de vídeo mostra um botão de play; com o ID do YouTube preenchido, o vídeo carrega ao clicar
-  (`youtube-nocookie`). Sem ID, fica o espaço reservado.
-
-## Páginas geradas
-
-Home · Sobre · ESG · Carreira · Cases · Plataforma · Contato · Conteúdo (+ 6 artigos) ·
-Áreas de atuação (índice + 5 páginas) · Verticais (índice + 8 páginas) · Privacidade · 404 ·
-sitemap.xml · robots.txt
-
-## Movimento
-
-- **Topo da home**: ondas roxas animadas geradas por código (WebGL, `canvas.fx-waves`), no estilo de água
-  vista de cima. Para usar um vídeo próprio, coloque a URL do .mp4 em `site.heroVideo`: o vídeo substitui as ondas.
-- **Topo das páginas internas**: as mesmas ondas, mais suaves, sobre a foto (`site.headlineFx: false` desliga).
-- **Todas as fotos**: zoom lento contínuo com direção aleatória (Ken Burns) e parallax ao rolar.
-  Funciona com qualquer imagem trocada pelo marketing, sem configuração.
-- Quem ativa "reduzir movimento" no sistema vê tudo estático. As animações pausam fora da tela.
+- Ilustrações em `src/assets/img/art/` são originais (SVG) e podem ficar; fotos de pessoas/escritório
+  ainda são placeholders (`ph-XX.svg`, etiqueta "Substituir"; `placeholderLabels: false` esconde a etiqueta).
+- Vídeos: preencha os IDs em `src/data.js`; até lá o bloco mostra "em breve".
+- Números/clientes/prêmios: o site **não** exibe métricas não verificadas. Para incluir, confirme a fonte e edite `presence.facts`, `about.facts` etc.
 
 ## Formulários (back-end)
 
-`server.js` serve os arquivos e recebe `POST /api/contato`, `/api/newsletter` e `/api/carreira`.
-Valida campos, bloqueia robôs (honeypot), limita envios por IP e grava em `data/*.jsonl`.
-Defina `LEADS_WEBHOOK_URL=https://...` para encaminhar cada lead a um CRM, n8n ou Zapier.
+`server.js` serve os arquivos e recebe `POST /api/contato`, `/api/newsletter`, `/api/parceria` e `/api/carreira` (JSON).
+Valida campos (enums de segmento/serviço, telefone BR, e-mail, LGPD), bloqueia robôs (honeypot + tempo mínimo de 3 s),
+limita envios por IP e por e-mail, grava em `data/*.jsonl` e encaminha para `LEADS_WEBHOOK_URL` e/ou SMTP quando configurados
+(variáveis em `.env.example`). Sem configuração, os leads ficam no JSONL e o log avisa.
+
+## Qualidade
+
+`docs/audit/` diagnóstico · `docs/design/` design system e assets · `docs/project/` backlog e entrega ·
+`docs/qa/` testes, revisão visual, performance e revisão técnica · `docs/deployment/` implantação e rollback.
 
 ## Dependências externas (CDN)
 
-Google Fonts (Plus Jakarta Sans, Dancing Script), Font Awesome 6.5.2 e Swiper 11.1.4 (carregado só
-quando há carrossel na tela).
+Google Fonts (Plus Jakarta Sans) e Swiper 11 (carregado sob demanda; sem CDN o carrossel vira rolagem horizontal). Font Awesome foi removido.

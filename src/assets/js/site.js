@@ -1,209 +1,226 @@
-/* Bear Finance — comportamentos do site (sem dependências além do Swiper, carregado sob demanda) */
+/* Bear Finance — comportamentos do site (sem dependências; Swiper carregado sob demanda) */
 (() => {
+  "use strict";
+  document.documentElement.classList.add("js");
   const $ = (s, el = document) => el.querySelector(s);
   const $$ = (s, el = document) => [...el.querySelectorAll(s)];
   const body = document.body;
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const CHECK = '<svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m8.5 12.5 2.5 2.5 5-5"/></svg>';
 
-  /* ---------- estado de rolagem (header, botões flutuantes) ---------- */
-  const onScroll = () => {
-    const y = window.scrollY || document.documentElement.scrollTop;
-    body.classList.toggle("active", y > 120);
-    body.classList.toggle("end", window.innerHeight + y >= document.body.offsetHeight - 2);
-  };
-  window.addEventListener("scroll", onScroll, { passive: true });
-  window.addEventListener("load", () => { body.classList.add("load"); onScroll(); });
+  /* ---------- mensuração (só envia se houver dataLayer/GTM configurado) ---------- */
+  const track = (event, props = {}) => { try { if (window.dataLayer) window.dataLayer.push({ event, ...props }); } catch (_) { /* noop */ } };
+  document.addEventListener("click", (e) => {
+    const t = e.target.closest("[data-track]");
+    if (t) track(t.dataset.track, { label: t.dataset.label || t.textContent.trim().slice(0, 60), href: t.getAttribute("href") || "" });
+  });
 
-  /* ---------- menu ---------- */
-  $$(".open-menu").forEach((btn) =>
-    btn.addEventListener("click", () => {
-      btn.classList.toggle("active");
-      body.classList.toggle("active-menu");
-    })
-  );
-  $$(".menu-item-has-children > a").forEach((a) =>
-    a.addEventListener("click", (e) => {
-      if (window.matchMedia("(max-width: 991px)").matches) {
-        const li = a.parentElement;
-        if (!li.classList.contains("active")) { e.preventDefault(); li.classList.add("active"); }
-      }
-    })
-  );
+  /* ---------- estado de rolagem ---------- */
+  let scrolled = null;
+  const onScroll = () => { const s = scrollY > 60; if (s !== scrolled) { scrolled = s; body.classList.toggle("is-scrolled", s); } };
+  addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
 
-  /* ---------- texto digitado do topo ---------- */
-  const typed = $(".typed-text");
-  if (typed && !reduceMotion) {
-    const words = JSON.parse(typed.dataset.words || "[]");
-    const cursor = $(".cursor");
-    let wi = 0, ci = 0;
-    const type = () => {
-      if (ci < words[wi].length) { typed.textContent += words[wi].charAt(ci++); setTimeout(type, 120); }
-      else setTimeout(erase, 1000);
-    };
-    const erase = () => {
-      if (ci > 0) { typed.textContent = words[wi].substring(0, --ci); setTimeout(erase, 100); }
-      else { wi = (wi + 1) % words.length; setTimeout(type, 1220); }
-    };
-    if (words.length) setTimeout(type, 1250);
-    void cursor;
-  } else if (typed) {
-    typed.textContent = JSON.parse(typed.dataset.words || '[""]')[0];
+  /* ---------- navegação (desktop: hover/foco; mobile: drawer; teclado: botões) ---------- */
+  const burger = $(".burger"), nav = $("#site-navigation");
+  const closeSubs = (except) => $$(".nav__item.is-open").forEach((li) => { if (li !== except) { li.classList.remove("is-open"); const b = $("button[aria-expanded]", li); if (b) b.setAttribute("aria-expanded", "false"); } });
+  const setNav = (open) => { body.classList.toggle("nav-open", open); if (burger) burger.setAttribute("aria-expanded", String(open)); if (!open) closeSubs(); };
+  if (burger && nav) {
+    burger.addEventListener("click", () => { const open = !body.classList.contains("nav-open"); setNav(open); if (open) { const f = $("a, button", nav); if (f) f.focus({ preventScroll: true }); } });
+    nav.addEventListener("keydown", (e) => {
+      if (e.key !== "Tab" || !body.classList.contains("nav-open")) return;
+      const f = $$("a, button", nav).filter((el) => el.offsetParent !== null);
+      if (!f.length) return;
+      if (e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); burger.focus(); }
+      else if (!e.shiftKey && document.activeElement === f[f.length - 1]) { e.preventDefault(); burger.focus(); }
+    });
+    const mq = matchMedia("(min-width: 992px)");
+    (mq.addEventListener ? mq.addEventListener("change", (e) => { if (e.matches) setNav(false); }) : mq.addListener((e) => { if (e.matches) setNav(false); }));
+  }
+  $$(".nav__item.has-sub > button").forEach((b) => b.addEventListener("click", () => {
+    const li = b.parentElement, open = !li.classList.contains("is-open");
+    closeSubs(li); li.classList.toggle("is-open", open); b.setAttribute("aria-expanded", String(open));
+  }));
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== "Escape") return;
+    if (body.classList.contains("nav-open")) { setNav(false); if (burger) burger.focus(); }
+    else closeSubs();
+  });
+  document.addEventListener("click", (e) => { if (!e.target.closest(".nav__item")) closeSubs(); });
+
+  /* ---------- texto digitado do hero ---------- */
+  const typed = $(".typed");
+  if (typed) {
+    let words = [];
+    try { words = JSON.parse(typed.dataset.words || "[]"); } catch (_) { /* noop */ }
+    if (words.length > 1 && !reduceMotion) {
+      let wi = 0, ci = words[0].length, erasing = true;
+      const tick = () => {
+        const w = words[wi];
+        if (erasing) { ci--; typed.textContent = w.slice(0, ci); if (ci <= 0) { erasing = false; wi = (wi + 1) % words.length; } setTimeout(tick, 70); }
+        else { ci++; typed.textContent = words[wi].slice(0, ci); if (ci >= words[wi].length) { erasing = true; setTimeout(tick, 2200); } else setTimeout(tick, 110); }
+      };
+      setTimeout(tick, 2400);
+    }
   }
 
-  /* ---------- vídeo de fundo do topo ---------- */
+  /* ---------- vídeo de fundo (quando houver .mp4) ---------- */
   const vdHome = $("#video-home");
   if (vdHome && vdHome.dataset.video && !reduceMotion) {
     vdHome.insertAdjacentHTML("beforeend", `<video preload="auto" autoplay muted playsinline loop src="${vdHome.dataset.video}"></video>`);
     vdHome.classList.add("active");
   }
 
-  /* ---------- revelação ao rolar (.inspect) ---------- */
-  const inspect = $$(".inspect");
+  /* ---------- revelação ao rolar ---------- */
+  $$(".reveal-group").forEach((g) => [...g.children].forEach((c, i) => { if (!c.style.getPropertyValue("--i")) c.style.setProperty("--i", i); }));
+  const targets = $$(".reveal, .reveal-group");
   if ("IntersectionObserver" in window && !reduceMotion) {
-    const io = new IntersectionObserver((entries) => entries.forEach((e) => {
-      if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
-    }), { rootMargin: "0px 0px -8% 0px", threshold: 0.05 });
-    inspect.forEach((el) => io.observe(el));
-  } else inspect.forEach((el) => el.classList.add("in"));
+    const io = new IntersectionObserver((entries) => entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { rootMargin: "0px 0px -8% 0px", threshold: 0.05 });
+    targets.forEach((el) => io.observe(el));
+  } else targets.forEach((el) => el.classList.add("in"));
 
-  /* ---------- contadores ---------- */
-  const animateValue = (el, end, duration = 1000) => {
-    let start = null;
-    const step = (ts) => {
-      if (!start) start = ts;
-      const p = Math.min((ts - start) / duration, 1);
-      el.textContent = (el.dataset.prefix || "") + Math.floor(p * end).toLocaleString("pt-BR") + (el.dataset.suffix || "");
-      if (p < 1) requestAnimationFrame(step);
-    };
-    requestAnimationFrame(step);
-  };
-  const numbers = $$("[data-number]");
-  if (numbers.length) {
-    const run = () => numbers.forEach((n) => reduceMotion
-      ? (n.textContent = (n.dataset.prefix || "") + Number(n.dataset.number).toLocaleString("pt-BR") + (n.dataset.suffix || ""))
-      : animateValue(n, Number(n.dataset.number)));
-    if ("IntersectionObserver" in window) {
-      const io = new IntersectionObserver((entries) => entries.forEach((e) => {
-        if (e.isIntersecting) { run(); io.disconnect(); }
-      }), { rootMargin: "10px" });
-      io.observe(numbers[0].closest("section") || numbers[0]);
-    } else run();
-  }
+  /* ---------- FAQ (botões acessíveis) ---------- */
+  $$(".faq__q").forEach((btn) => btn.addEventListener("click", () => {
+    const open = btn.getAttribute("aria-expanded") === "true";
+    const panel = document.getElementById(btn.getAttribute("aria-controls"));
+    btn.setAttribute("aria-expanded", String(!open));
+    if (panel) panel.hidden = open;
+  }));
 
-  /* ---------- FAQ ---------- */
-  $$("#faq .faq-item").forEach((item) => {
-    const title = $(".faq-title", item), content = $(".faq-content", item);
-    title.addEventListener("click", () => {
-      const open = item.classList.toggle("active");
-      content.style.maxHeight = open ? content.scrollHeight + 30 + "px" : "0px";
+  /* ---------- abas (ARIA) ---------- */
+  $$('[role="tablist"]').forEach((list) => {
+    const tabs = $$('[role="tab"]', list);
+    const activate = (tab) => tabs.forEach((t) => { const on = t === tab; t.setAttribute("aria-selected", String(on)); t.tabIndex = on ? 0 : -1; const p = document.getElementById(t.getAttribute("aria-controls")); if (p) p.hidden = !on; });
+    tabs.forEach((t, i) => {
+      t.addEventListener("click", () => activate(t));
+      t.addEventListener("keydown", (e) => {
+        const map = { ArrowRight: (i + 1) % tabs.length, ArrowLeft: (i - 1 + tabs.length) % tabs.length, Home: 0, End: tabs.length - 1 };
+        if (e.key in map) { e.preventDefault(); tabs[map[e.key]].focus(); activate(tabs[map[e.key]]); }
+      });
     });
-  });
-
-  /* ---------- abas (#title-tabs) ---------- */
-  $$("#title-tabs .title-tab").forEach((tab, i, all) => {
-    const panels = $$(".item-tab");
-    const select = () => {
-      all.forEach((t) => t.classList.toggle("active", t === tab));
-      panels.forEach((p) => p.classList.toggle("active", p.dataset.tab === tab.dataset.tab));
-    };
-    tab.addEventListener("click", select);
-    if (i === 0) select();
   });
 
   /* ---------- vídeos (carregam só ao clicar) ---------- */
-  $$(".video-container .poster").forEach((poster) => {
-    poster.addEventListener("click", () => {
-      const box = poster.parentElement;
-      if (poster.dataset.embed) {
-        const f = document.createElement("iframe");
-        f.src = `https://www.youtube-nocookie.com/embed/${poster.dataset.embed}?autoplay=1&rel=0`;
-        f.allow = "autoplay; encrypted-media; picture-in-picture";
-        f.allowFullscreen = true;
-        f.title = poster.dataset.title || "Vídeo";
-        box.appendChild(f); poster.remove();
-      } else if (poster.dataset.src) {
-        const v = document.createElement("video");
-        v.src = poster.dataset.src; v.controls = true; v.autoplay = true; v.playsInline = true;
-        box.appendChild(v); poster.remove();
-      } else {
-        poster.classList.add("shake");
-        setTimeout(() => poster.classList.remove("shake"), 600);
-      }
-    });
-  });
+  $$(".video__poster").forEach((poster) => poster.addEventListener("click", () => {
+    const box = poster.parentElement;
+    if (poster.dataset.embed) {
+      const f = document.createElement("iframe");
+      f.src = `https://www.youtube-nocookie.com/embed/${poster.dataset.embed}?autoplay=1&rel=0`;
+      f.allow = "autoplay; encrypted-media; picture-in-picture"; f.allowFullscreen = true; f.title = poster.dataset.title || "Vídeo";
+      box.appendChild(f); poster.remove();
+    } else if (poster.dataset.src) {
+      const v = document.createElement("video");
+      v.src = poster.dataset.src; v.controls = true; v.autoplay = true; v.playsInline = true;
+      box.appendChild(v); poster.remove();
+    } else { poster.classList.add("shake"); setTimeout(() => poster.classList.remove("shake"), 600); }
+  }));
 
-  /* ---------- Swiper (carrosséis) ---------- */
+  /* ---------- Swiper (carrosséis), carregado sob demanda ---------- */
   const swipers = $$(".swiper");
   if (swipers.length) {
     const init = () => {
-      const S = window.Swiper;
-      if (!S) return;
-      const auto = (delay) => (reduceMotion ? false : { delay, disableOnInteraction: false });
-      if ($(".swiper-clientes")) new S(".swiper-clientes", { slidesPerView: 5, spaceBetween: 30, loop: true, speed: 1500, autoplay: auto(2500), breakpoints: { 0: { slidesPerView: 2 }, 768: { slidesPerView: 3 }, 1024: { slidesPerView: 5 } } });
-      if ($(".swiper-vertical")) new S(".swiper-vertical", { slidesPerView: 4, spaceBetween: 40, speed: 1200, loop: true, centeredSlides: true, autoplay: auto(5000), pagination: { el: ".vertical-pagination", clickable: true }, navigation: { nextEl: ".vertical-button-next", prevEl: ".vertical-button-prev" }, breakpoints: { 0: { slidesPerView: 1, spaceBetween: 0 }, 768: { slidesPerView: 1, spaceBetween: 0 }, 1024: { slidesPerView: 3, spaceBetween: 30 }, 1400: { slidesPerView: 4, spaceBetween: 40 } } });
-      if ($(".swiper-team")) new S(".swiper-team", { slidesPerView: 5, spaceBetween: 40, speed: 2000, loop: true, autoplay: auto(5500), breakpoints: { 0: { slidesPerView: 1, spaceBetween: 15 }, 480: { slidesPerView: 2, spaceBetween: 20 }, 768: { slidesPerView: 3, spaceBetween: 30 }, 1024: { slidesPerView: 5, spaceBetween: 40 } } });
-      if ($(".swiper-atua")) new S(".swiper-atua", { slidesPerView: 4, spaceBetween: 20, loop: true, speed: 1200, autoplay: auto(3500), pagination: { el: ".atua-pagination", clickable: true }, breakpoints: { 0: { slidesPerView: 2 }, 768: { slidesPerView: 3 }, 1024: { slidesPerView: 4 } } });
+      const Sw = window.Swiper;
+      if (!Sw) return;
+      const auto = (delay) => (reduceMotion ? false : { delay, disableOnInteraction: false, pauseOnMouseEnter: true });
+      if ($(".swiper-vertical")) new Sw(".swiper-vertical", { slidesPerView: 1.1, spaceBetween: 16, speed: 900, loop: true, autoplay: auto(5000), pagination: { el: ".vertical-pagination", clickable: true }, navigation: { nextEl: ".vertical-button-next", prevEl: ".vertical-button-prev" }, a11y: { prevSlideMessage: "Segmento anterior", nextSlideMessage: "Próximo segmento" }, breakpoints: { 640: { slidesPerView: 2, spaceBetween: 20 }, 992: { slidesPerView: 3, spaceBetween: 22 }, 1280: { slidesPerView: 3.5, spaceBetween: 24 } } });
+      if ($(".swiper-team")) new Sw(".swiper-team", { slidesPerView: 1, spaceBetween: 20, loop: true, autoplay: auto(5500), breakpoints: { 600: { slidesPerView: 2 }, 992: { slidesPerView: 3 } } });
     };
     const load = () => {
       if (window.Swiper) return init();
       const css = document.createElement("link"); css.rel = "stylesheet"; css.href = "https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.1.4/swiper-bundle.min.css";
-      const js = document.createElement("script"); js.src = "https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.1.4/swiper-bundle.min.js"; js.onload = init;
+      const js = document.createElement("script"); js.src = "https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.1.4/swiper-bundle.min.js"; js.onload = init; js.onerror = () => console.warn("[swiper] CDN indisponível; carrossel em modo de rolagem.");
       document.head.append(css, js);
     };
     if ("IntersectionObserver" in window) {
-      const io = new IntersectionObserver((entries) => { if (entries.some((e) => e.isIntersecting)) { io.disconnect(); load(); } }, { rootMargin: "400px" });
+      const io = new IntersectionObserver((entries) => { if (entries.some((e) => e.isIntersecting)) { io.disconnect(); load(); } }, { rootMargin: "500px" });
       swipers.forEach((s) => io.observe(s));
     } else load();
   }
 
-  /* ---------- filtro do blog ---------- */
-  $$("[data-filter]").forEach((btn) =>
-    btn.addEventListener("click", (e) => {
-      e.preventDefault();
-      const cat = btn.dataset.filter;
-      $$("[data-filter]").forEach((b) => b.classList.toggle("active", b === btn));
-      $$("[data-category]").forEach((it) => { it.hidden = cat !== "all" && it.dataset.category !== cat; });
-    })
-  );
+  /* ---------- filtro de conteúdo ---------- */
+  $$(".filters button[data-filter]").forEach((btn) => btn.addEventListener("click", () => {
+    const cat = btn.dataset.filter;
+    $$(".filters button[data-filter]").forEach((b) => b.setAttribute("aria-pressed", String(b === btn)));
+    $$("[data-category]").forEach((it) => { it.hidden = cat !== "all" && it.dataset.category !== cat; });
+  }));
+  if (location.hash && $(".filters")) {
+    const want = decodeURIComponent(location.hash.slice(1));
+    const b = $$(".filters button[data-filter]").find((x) => x.dataset.filter === want);
+    if (b) b.click();
+  }
+
+  /* ---------- máscara de telefone (00) 00000-0000 ---------- */
+  $$('[data-mask="phone"]').forEach((inp) => inp.addEventListener("input", () => {
+    const d = inp.value.replace(/\D/g, "").slice(0, 11);
+    let v = d;
+    if (d.length > 2) v = `(${d.slice(0, 2)}) ${d.slice(2)}`;
+    if (d.length > 6) v = `(${d.slice(0, 2)}) ${d.slice(2, d.length - 4)}-${d.slice(-4)}`;
+    inp.value = v;
+  }));
 
   /* ---------- formulários → API ---------- */
+  const params = new URLSearchParams(location.search);
   $$("form[data-api]:not([data-wa-form])").forEach((form) => {
-    const status = $(".message", form);
+    if (form.elements.ts) form.elements.ts.value = String(Date.now());
+    if (form.elements.origem) form.elements.origem.value = location.pathname;
+    ["servico", "segmento"].forEach((k) => { const v = params.get(k), el = form.elements[k]; if (v && el && [...el.options].some((o) => o.value === v)) el.value = v; });
+    const msg = $(".form__msg, .message", form);
+    const mark = (el, bad) => { const f = el.closest(".field"); if (f) f.classList.toggle("is-invalid", bad); if (bad) el.setAttribute("aria-invalid", "true"); else el.removeAttribute("aria-invalid"); };
+    $$("input, select, textarea", form).forEach((el) => el.addEventListener("input", () => { if (el.getAttribute("aria-invalid") === "true" && el.checkValidity()) mark(el, false); }));
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
-      if (!form.reportValidity()) return;
+      let first = null;
+      $$("input, select, textarea", form).forEach((el) => { if (el.type === "hidden" || el.classList.contains("hp")) return; const bad = !el.checkValidity(); mark(el, bad); if (bad && !first) first = el; });
+      if (first) { first.focus(); if (msg) { msg.className = "form__msg is-err"; msg.textContent = first.type === "checkbox" ? "Marque a autorização para continuar." : "Revise os campos destacados."; } return; }
       const btn = $('[type="submit"]', form);
-      btn.disabled = true;
-      if (status) { status.className = "message"; status.textContent = "Enviando…"; }
+      if (btn) btn.setAttribute("aria-busy", "true");
+      if (msg) { msg.className = "form__msg"; msg.textContent = "Enviando…"; }
       try {
-        const res = await fetch(form.dataset.api, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(Object.fromEntries(new FormData(form))) });
+        const data = Object.fromEntries(new FormData(form));
+        const res = await fetch(form.dataset.api, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) });
         const json = await res.json().catch(() => ({}));
         if (!res.ok) throw new Error(json.error || "Não foi possível enviar.");
-        form.reset();
-        if (status) { status.className = "message ok"; status.textContent = json.message || "Recebido! Em breve entraremos em contato."; }
+        track("form_submit_ok", { form: form.dataset.form || form.dataset.api });
+        if (form.dataset.form === "diagnostico") {
+          const waHref = form.dataset.wa;
+          form.innerHTML = `<div class="form__done" role="status">${CHECK}<h3>Recebemos a sua solicitação</h3><p>${json.message || "Em breve um especialista entra em contato."}</p>${waHref ? `<a class="btn btn--wa" href="${waHref}" target="_blank" rel="noopener" data-track="whatsapp_click">Adiantar pelo WhatsApp</a>` : ""}</div>`;
+          form.scrollIntoView({ block: "center", behavior: reduceMotion ? "auto" : "smooth" });
+        } else {
+          form.reset();
+          if (form.elements.ts) form.elements.ts.value = String(Date.now());
+          if (msg) { msg.className = "form__msg is-ok"; msg.textContent = json.message || "Recebido! Em breve entraremos em contato."; }
+        }
       } catch (err) {
-        if (status) { status.className = "message err"; status.textContent = err.message + " Se preferir, fale conosco pelo WhatsApp."; }
-      } finally { btn.disabled = false; }
+        if (msg) { msg.className = "form__msg is-err"; msg.textContent = `${err.message} Se preferir, fale conosco pelo WhatsApp.`; }
+      } finally { if (btn) btn.removeAttribute("aria-busy"); }
     });
   });
 
   /* ---------- cookies ---------- */
-  const cookie = $(".cookieConsentContainer");
+  const cookie = $(".cookie");
   if (cookie) {
-    let ok = false;
-    try { ok = localStorage.getItem("bf-cookies") === "1"; } catch (_) {}
-    cookie.classList.toggle("hidden", ok);
-    $(".cookieButton a", cookie).addEventListener("click", (e) => {
-      e.preventDefault();
-      try { localStorage.setItem("bf-cookies", "1"); } catch (_) {}
-      cookie.classList.add("hidden");
-    });
+    let choice = null;
+    try { choice = localStorage.getItem("bf-cookies"); } catch (_) { /* noop */ }
+    if (!choice) cookie.hidden = false;
+    $$("[data-cookie]", cookie).forEach((b) => b.addEventListener("click", () => {
+      try { localStorage.setItem("bf-cookies", b.dataset.cookie); } catch (_) { /* noop */ }
+      cookie.hidden = true;
+      track("cookie_choice", { choice: b.dataset.cookie });
+    }));
   }
 
+  /* ---------- compartilhar ---------- */
+  $$("[data-share]").forEach((b) => b.addEventListener("click", async () => {
+    const url = location.href, title = document.title;
+    const kind = b.dataset.share;
+    if (kind === "linkedin") open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`, "_blank", "noopener");
+    else if (kind === "whatsapp") open(`https://wa.me/?text=${encodeURIComponent(`${title} ${url}`)}`, "_blank", "noopener");
+    else if (kind === "copy") { try { await navigator.clipboard.writeText(url); b.setAttribute("aria-label", "Link copiado"); b.classList.add("is-ok"); setTimeout(() => { b.setAttribute("aria-label", "Copiar link"); b.classList.remove("is-ok"); }, 1800); } catch (_) { prompt("Copie o link:", url); } }
+  }));
+
   /* ---------- diversos ---------- */
-  $$(".scroll-top").forEach((b) => b.addEventListener("click", (e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" }); }));
+  $$(".totop").forEach((b) => b.addEventListener("click", (e) => { e.preventDefault(); scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" }); }));
   $$("[data-job]").forEach((a) => a.addEventListener("click", () => { const s = $("#c-vaga"); if (s) s.value = a.dataset.job; }));
-  const y = $("#year"); if (y) y.textContent = new Date().getFullYear();
 
   /* ---------- parcerias: formulário em 2 etapas → WhatsApp ---------- */
   $$("form[data-wa-form]").forEach((form) => {
@@ -211,18 +228,9 @@
     const steps = $$(".pform-step", form);
     const bar = $(".pform-progress span", box);
     const labels = $$(".pform-steps li", box);
-    const status = $(".message", form);
+    const status = $(".form__msg, .message", form);
     const done = $(".pform-done", form);
-
-    // máscara (00) 00000-0000
-    $$('[data-mask="phone"]', form).forEach((inp) => inp.addEventListener("input", () => {
-      const d = inp.value.replace(/\D/g, "").slice(0, 11);
-      let v = d;
-      if (d.length > 2) v = `(${d.slice(0, 2)}) ${d.slice(2)}`;
-      if (d.length > 6) v = `(${d.slice(0, 2)}) ${d.slice(2, d.length - 4)}-${d.slice(-4)}`;
-      inp.value = v;
-    }));
-
+    if (form.elements.ts) form.elements.ts.value = String(Date.now());
     const go = (n) => {
       steps.forEach((st, i) => { st.hidden = i !== n; });
       labels.forEach((li, i) => { li.classList.toggle("on", i <= n); });
@@ -230,7 +238,6 @@
       const first = $("input:not([type=hidden]), select, textarea", steps[n]);
       if (first) first.focus({ preventScroll: true });
     };
-    // valida só os campos da etapa visível; grupos de chips obrigatórios exigem 1 marcado
     const valid = (st) => {
       for (const el of $$("input, select, textarea", st)) {
         if (el.type === "radio" || el.type === "checkbox") continue;
@@ -246,9 +253,7 @@
     };
     $$("[data-next]", form).forEach((b) => b.addEventListener("click", () => { if (valid(steps[0])) go(1); }));
     $$("[data-prev]", form).forEach((b) => b.addEventListener("click", () => go(0)));
-    // Enter na etapa 1 avança em vez de enviar
     steps[0].addEventListener("keydown", (e) => { if (e.key === "Enter" && e.target.tagName === "INPUT") { e.preventDefault(); if (valid(steps[0])) go(1); } });
-
     const collect = () => {
       const data = {}, order = [], labelOf = {};
       $$("input, select, textarea", form).forEach((el) => {
@@ -256,83 +261,35 @@
         if ((el.type === "checkbox" || el.type === "radio") && !el.checked) return;
         const v = (el.value || "").trim();
         if (!v) return;
-        if (!(el.name in data)) { order.push(el.name); data[el.name] = v; }
-        else data[el.name] += ", " + v;
+        if (!(el.name in data)) { order.push(el.name); data[el.name] = v; } else data[el.name] += ", " + v;
         if (el.dataset.label) labelOf[el.name] = el.dataset.label;
       });
       return { data, order, labelOf };
     };
-    const message = ({ data, order, labelOf }) => {
-      const lines = [`Olá! Quero ser *${data.programa}* da Bear Finance.`, ""];
-      order.forEach((k) => { if (labelOf[k] && k !== "lgpd") lines.push(`*${labelOf[k]}:* ${data[k]}`); });
-      return lines.join("\n");
-    };
-
+    const message = ({ data, order, labelOf }) => [`Olá! Quero ser *${data.programa}* da Bear Finance.`, "", ...order.filter((k) => labelOf[k] && k !== "lgpd").map((k) => `*${labelOf[k]}:* ${data[k]}`)].join("\n");
     form.addEventListener("submit", (e) => {
       e.preventDefault();
       if (!valid(steps[0])) return go(0);
       if (!valid(steps[1])) return;
+      if (form.elements.website && form.elements.website.value) return;
       const c = collect();
-      if (form.elements.website && form.elements.website.value) return; // robô
       const url = `https://wa.me/${form.dataset.wa}?text=${encodeURIComponent(message(c))}`;
-      // abre o WhatsApp ainda dentro do clique (evita bloqueio de pop-up)
-      // (sem a flag "noopener": com ela, window.open sempre retorna null e não dá para detectar bloqueio)
-      const win = window.open(url, "_blank");
-      if (win) { try { win.opener = null; } catch (_) {} }
-      // grava o lead sem bloquear a conversa
-      try {
-        fetch(form.dataset.api, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(c.data), keepalive: true }).catch(() => {});
-      } catch (_) {}
-      steps.forEach((st) => (st.hidden = true));
+      const win = open(url, "_blank");
+      if (win) { try { win.opener = null; } catch (_) { /* noop */ } }
+      try { fetch(form.dataset.api, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(c.data), keepalive: true }).catch(() => {}); } catch (_) { /* noop */ }
+      track("partner_form_submit", { programa: c.data.programa });
+      steps.forEach((st) => { st.hidden = true; });
       if (bar) bar.style.width = "100%";
       labels.forEach((li) => li.classList.add("on"));
       const again = $("[data-wa-open]", done);
       if (again) again.href = url;
       done.hidden = false;
       if (status) status.textContent = "";
-      if (!win) location.href = url; // pop-up bloqueado (ou app no celular): segue na mesma aba
+      if (!win) location.href = url;
     });
   });
 
-  /* ---------- fotos em movimento: zoom lento (Ken Burns) + parallax ---------- */
-  const rnd = (a, b) => a + Math.random() * (b - a);
-  const kbLayers = [];
-  $$(".bg, .post-img").forEach((el) => {
-    if (el.closest(".site-footer") || el.classList.contains("kb")) return;
-    const bi = el.style.backgroundImage;
-    if (!bi || bi === "none") return;
-    el.style.backgroundImage = "none";
-    el.classList.add("kb");
-    const layer = document.createElement("span");
-    layer.className = "kb-layer";
-    layer.style.backgroundImage = bi;
-    layer.style.setProperty("--kb-dur", rnd(18, 30).toFixed(1) + "s");
-    layer.style.setProperty("--kb-delay", -rnd(0, 20).toFixed(1) + "s");
-    layer.style.setProperty("--kb-ox", rnd(15, 85).toFixed(0) + "%");
-    layer.style.setProperty("--kb-oy", rnd(15, 85).toFixed(0) + "%");
-    el.prepend(layer);
-    kbLayers.push(layer);
-  });
-  if (!reduceMotion && kbLayers.length && "IntersectionObserver" in window) {
-    const visible = new Set();
-    const io = new IntersectionObserver((entries) => entries.forEach((e) => (e.isIntersecting ? visible.add(e.target) : visible.delete(e.target))), { rootMargin: "100px" });
-    kbLayers.forEach((l) => io.observe(l.parentElement));
-    let ticking = false;
-    const update = () => {
-      ticking = false;
-      const vh = window.innerHeight;
-      visible.forEach((el) => {
-        const r = el.getBoundingClientRect();
-        const off = (r.top + r.height / 2 - vh / 2) / vh; // -1..1 aprox.
-        const layer = el.firstElementChild;
-        if (layer) layer.style.translate = `0 ${(off * -6).toFixed(2)}%`;
-      });
-    };
-    window.addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
-    update();
-  }
-
-  /* ---------- ondas animadas (WebGL) ---------- */
+  /* ---------- ondas animadas do hero (WebGL, só na home) ---------- */
   const FRAG = `
 precision mediump float;
 uniform vec2 uRes; uniform float uTime;
@@ -340,25 +297,24 @@ float hash(vec2 p){ p = fract(p * vec2(123.34, 456.21)); p += dot(p, p + 45.32);
 float noise(vec2 p){ vec2 i = floor(p), f = fract(p); vec2 u = f * f * (3.0 - 2.0 * f);
   return mix(mix(hash(i), hash(i + vec2(1.0, 0.0)), u.x), mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), u.x), u.y); }
 float fbm(vec2 p){ float v = 0.0, a = 0.5; mat2 m = mat2(1.6, 1.2, -1.2, 1.6);
-  for (int i = 0; i < 6; i++) { v += a * noise(p); p = m * p; a *= 0.5; } return v; }
+  for (int i = 0; i < 5; i++) { v += a * noise(p); p = m * p; a *= 0.5; } return v; }
 void main(){
   vec2 uv = gl_FragCoord.xy / uRes.y;
-  float T = uTime * 0.045;
-  vec2 p = uv * 2.2 + vec2(T * 0.7, T * 0.35);
+  float T = uTime * 0.035;
+  vec2 p = uv * 2.0 + vec2(T * 0.7, T * 0.35);
   vec2 q = vec2(fbm(p + vec2(0.0, T)), fbm(p + vec2(5.2, 1.3) - T));
   vec2 w = vec2(fbm(p + 3.0 * q + vec2(1.7, 9.2) + T * 1.6), fbm(p + 3.0 * q + vec2(8.3, 2.8) - T * 1.2));
   float f = fbm(p + 3.5 * w);
-  float foam = smoothstep(0.56, 0.86, f) * (0.55 + 0.45 * fbm(p * 6.0 + w * 4.0 + T * 3.0));
-  vec3 deep = vec3(0.05, 0.03, 0.12), mid = vec3(0.24, 0.11, 0.50), lil = vec3(0.66, 0.55, 0.98), white = vec3(0.95, 0.92, 1.0);
-  vec3 col = mix(deep, mid, smoothstep(0.18, 0.70, f));
-  col = mix(col, lil, smoothstep(0.50, 0.80, f) * 0.55);
-  col = mix(col, white, foam * 0.8);
+  vec3 deep = vec3(0.03, 0.02, 0.06), mid = vec3(0.18, 0.08, 0.40), lil = vec3(0.55, 0.42, 0.90);
+  vec3 col = mix(deep, mid, smoothstep(0.25, 0.75, f));
+  col = mix(col, lil, smoothstep(0.58, 0.85, f) * 0.5);
   gl_FragColor = vec4(col, 1.0);
 }`;
   const VERT = "attribute vec2 a; void main(){ gl_Position = vec4(a, 0.0, 1.0); }";
   $$("canvas.fx-waves").forEach((cv) => {
-    const gl = cv.getContext("webgl", { antialias: false, alpha: false, powerPreference: "low-power" });
-    if (!gl) return; // sem WebGL: fica a foto com zoom lento
+    let gl = null;
+    try { gl = cv.getContext("webgl", { antialias: false, alpha: false, powerPreference: "low-power" }); } catch (_) { gl = null; }
+    if (!gl) return;
     const sh = (type, src) => { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); return gl.getShaderParameter(s, gl.COMPILE_STATUS) ? s : null; };
     const vs = sh(gl.VERTEX_SHADER, VERT), fs = sh(gl.FRAGMENT_SHADER, FRAG);
     if (!vs || !fs) return;
@@ -373,34 +329,22 @@ void main(){
     gl.enableVertexAttribArray(loc);
     gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
     const uRes = gl.getUniformLocation(prog, "uRes"), uTime = gl.getUniformLocation(prog, "uTime");
-
-    const SCALE = 0.5; // renderiza em meia resolução: mais leve e com aspecto de névoa
+    const SCALE = 0.4;
     const resize = () => {
       const w = Math.min(cv.clientWidth, 1600) * SCALE, h = Math.min(cv.clientHeight, 1000) * SCALE;
       cv.width = Math.max(1, Math.round(w)); cv.height = Math.max(1, Math.round(h));
-      gl.viewport(0, 0, cv.width, cv.height);
-      gl.uniform2f(uRes, cv.width, cv.height);
+      gl.viewport(0, 0, cv.width, cv.height); gl.uniform2f(uRes, cv.width, cv.height);
     };
     resize();
-    window.addEventListener("resize", resize);
-
-    const t0 = performance.now() - rnd(0, 60000);
+    addEventListener("resize", resize);
+    const t0 = performance.now() - Math.random() * 60000;
     const draw = (now) => { gl.uniform1f(uTime, (now - t0) / 1000); gl.drawArrays(gl.TRIANGLES, 0, 3); };
     draw(performance.now());
     cv.classList.add("on");
-    if (reduceMotion) return; // um quadro estático
-
+    if (reduceMotion) return;
     let running = false, inView = true, last = 0;
-    const loop = (now) => {
-      if (!running) return;
-      if (now - last > 33) { draw(now); last = now; } // ~30 fps
-      requestAnimationFrame(loop);
-    };
-    const setRun = () => {
-      const want = inView && !document.hidden;
-      if (want && !running) { running = true; requestAnimationFrame(loop); }
-      else if (!want) running = false;
-    };
+    const loop = (now) => { if (!running) return; if (now - last > 40) { draw(now); last = now; } requestAnimationFrame(loop); };
+    const setRun = () => { const want = inView && !document.hidden; if (want && !running) { running = true; requestAnimationFrame(loop); } else if (!want) running = false; };
     if ("IntersectionObserver" in window) new IntersectionObserver(([e]) => { inView = e.isIntersecting; setRun(); }).observe(cv);
     document.addEventListener("visibilitychange", setRun);
     setRun();
