@@ -579,7 +579,7 @@ const partnerFactsBP = [
   { value: "IA", label: "plataforma própria por trás de cada entrega" },
   { value: "5", label: "serviços para oferecer às empresas da sua rede" },
   { value: "8", label: "verticais com especialistas" },
-  { value: "0", label: "exigência de registro profissional para participar" },
+  { value: "2", label: "formas de atuar: só indicar ou prospectar ativamente" },
 ];
 
 export const partnerHub = {
