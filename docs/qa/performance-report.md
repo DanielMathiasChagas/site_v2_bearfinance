@@ -141,3 +141,17 @@ Observação: o Swiper 11.1.4 da cdnjs retornava **404** no baseline (carrossel 
 
 ## 7. Itens verificados sem pendência
 `lang="pt-BR"`, `title`/`description` únicos nas 34 páginas (exceções em §6.9), um `h1` por página, canonical, `og:*` completos (imagem 1200×630), Twitter card, favicon SVG + PNG + `apple-touch-icon` 180 px, `theme-color`, `robots` (`index,follow,max-image-preview:large`; 404 com `noindex`), `sitemap.xml`/`robots.txt`, JSON-LD válido em todas as páginas (`AccountingService`+`Organization`, `BreadcrumbList`, `FAQPage`, `Service`, `Article`; sem `aggregateRating`/prêmios), imagens com `width/height`, `loading="lazy"` fora da dobra e `fetchpriority="high"` no LCP (arte do hero/phead), `decoding="async"`, scripts `defer`, Swiper/CDN eliminados, WebGL e mapa com `prefers-reduced-motion`, skip link, `aria-expanded` em menu/FAQ, abas ARIA, rótulos visíveis nos formulários, Best Practices 100 (CSP, sem erros de console).
+
+## Medição final (orquestrador, build final — 14/10/2026)
+
+Após aplicar as pendências P0/P1 deste relatório (padding do carrossel → LCP válido; alvos de 24 px nos pontos; `aria-label` do logo removido; ordem de títulos; `<main>` envolvendo hero/topo; flutuantes dentro do rodapé; logo em WebP; mapa neural carregado só em desktop com ponteiro fino, imagem estática no mobile; `telephone` E.164; `sameAs` só após confirmação; `Article.image`; `lastmod` por página; fontes com `?v=`), Lighthouse 12.8.2 em `docs/qa/lighthouse/final/` (JSON + HTML):
+
+| Página | Mobile Perf / A11y / BP / SEO · LCP · CLS · TBT | Desktop Perf / A11y / BP / SEO · LCP · CLS |
+|---|---|---|
+| `/` | 100 / 100 / 100 / 100 · 1,4 s · 0 · 30 ms | 100 / 97→100* / 100 / 100 · 0,3 s · 0 |
+| `/atuacao/contabilidade/` | 100 / 100 / 100 / 100 · 1,4 s · 0 · 0 ms | 100 / 100 / 100 / 100 · 0,3 s · 0 |
+| `/verticais/contabilidade-agronegocio/` | 100 / 100 / 100 / 100 · 1,4 s · 0 · 0 ms | 100 / 100 / 100 / 100 · 0,3 s · 0 |
+| `/contato/` | 100 / 100 / 100 / 100 · 1,4 s · 0 · 0 ms | 100 / 100 / 100 / 100 · 0,3 s · 0 |
+| `/parcerias/business-partner/` | 100 / 100 / 100 / 100 · 1,8 s · 0 · 0 ms | 100 / 100 / 100 / 100 · 0,4 s · 0 |
+
+\* A home desktop foi medida antes da correção dos pontos do carrossel (97, `target-size`); a reauditoria de acessibilidade mobile após a correção deu **100** (`home-mobile-a11y.report.json`). Metas do projeto (Perf ≥ 90, A11y ≥ 95, BP ≥ 95, SEO ≥ 95, LCP ≤ 2,5 s, CLS ≤ 0,1) atingidas em todas as páginas medidas. Medições em laboratório (Lighthouse, Moto G Power simulado / desktop); INP exige dados de campo e não foi medido.
