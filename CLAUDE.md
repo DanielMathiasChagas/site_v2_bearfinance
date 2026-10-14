@@ -13,5 +13,5 @@ Gerador estático Node sem dependências: `src/data.js` → `src/build.js` → `
 ## Propriedade de arquivos (evitar conflito)
 build.js / site.css / site.js → orquestrador · brmap.js/css → frontend-architect · server.js + tests/server.test.js → backend-engineer · data.js → accounting-marketing · img/art + icons.js → creative-director · tests/e2e → qa-tester.
 
-## Checkpoint
-Ver `docs/project/backlog.md` (status por item) e `docs/project/final-delivery.md` (quando existir).
+## Checkpoint (14/10/2026)
+Fases 1–4 concluídas e commitadas em `redesign/v2`. Em andamento: QA E2E (agente qa-tester, porta 3300, `tests/e2e/`, `docs/qa/test-report.md`) e auditoria SEO/performance (agente seo-performance, porta 3500, `docs/qa/performance-report.md`). Próximos: aplicar correções, revisão técnica independente (`docs/qa/technical-review.md`), `docs/project/final-delivery.md`, commit final. Ver `docs/project/backlog.md`.

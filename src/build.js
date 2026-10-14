@@ -61,6 +61,8 @@ const segOf = (name) => D.verticals.find((v) => v.name === name);
 const PLAT_ART = art("tech-plataforma.svg");
 const HERO_ART = art("hero-neural.svg");
 const CTA_ART = art("cta-banner.svg");
+// pôsteres de vídeo por página (variados, para não repetir a mesma arte)
+const POSTER = { home: HERO_ART, sobre: art("svc-estruturacoes.svg"), cases: art("seg-industria.svg"), contato: art("svc-contabilidade.svg"), parcerias: art("svc-bpo-financeiro.svg"), plataforma: PLAT_ART, esg: art("seg-energia.svg"), verticais: art("seg-agronegocio.svg"), servicos: PLAT_ART };
 const raster = (base) => (has(`img/${base}.webp`) ? img(`${base}.webp`) : img(`${base}.jpg`));
 
 const ORG_LD = {
@@ -156,8 +158,9 @@ function footer(waHref) {
 
 function page({ key = "", title, description, active = "", bodyClass = "", body, path = "/", jsonld = [], crumbs = null, waHref = wa(WA_DEFAULT), ogType = "website", extraHead = "", extraScripts = "", noindex = false }) {
   const url = S.url + path;
-  const hasOg = has("img/og-image.png");
-  const ogImage = S.url + (hasOg ? "/assets/img/og-image.png" : img("URSO_GEOMETRICO_PURPLE.png"));
+  const ogFile = has("img/og-image.jpg") ? "og-image.jpg" : has("img/og-image.png") ? "og-image.png" : "";
+  const hasOg = Boolean(ogFile);
+  const ogImage = S.url + (hasOg ? img(ogFile) : img("URSO_GEOMETRICO_PURPLE.png"));
   const favSvg = art("favicon.svg");
   const apple = has("img/apple-touch-icon.png") ? "/assets/img/apple-touch-icon.png" : img("URSO_GEOMETRICO_PURPLE.png");
   const ld = [ORG_LD, ...(crumbs ? [breadcrumbLd(crumbs)] : []), ...jsonld];
@@ -387,7 +390,7 @@ ${curve("#proposta")}
     <p class="sec__more reveal"><a class="link" href="/atuacao/">Ver todas as soluções ${ico("arrow-right")}</a></p>
   </div></section>
 
-  ${videoSection(D.videos.home, "Conheça a <strong>Bear Finance</strong>", "Como unimos contabilidade consultiva, BPO financeiro e tecnologia própria para empresas em todo o Brasil.", { poster: HERO_ART || img("ph-09.svg") })}
+  ${videoSection(D.videos.home, "Conheça a <strong>Bear Finance</strong>", "Como unimos contabilidade consultiva, BPO financeiro e tecnologia própria para empresas em todo o Brasil.", { poster: POSTER.home || img("ph-09.svg") })}
 
   <section id="diferenciais" class="sec sec--deep"><div class="inner">
     ${sectionHead({ eyebrow: DIFF.eyebrow, h2: DIFF.h2, p: DIFF.p, two: true })}
@@ -461,7 +464,7 @@ ${phead({ crumbs: [["Soluções"]], eyebrow: "Soluções", h1: "Soluções cont�
 ${curve("#lista", { to: "soft" })}
 <main id="main" class="site-main">
   <section id="lista" class="sec sec--soft pt0"><div class="inner">${grid(D.services.map(svcCard), "svc-grid")}</div></section>
-  ${videoSection(D.videos.home, "Veja a Bear <strong>em ação</strong>", "Como entregamos contabilidade, finanças e tributos em uma única operação integrada.", { poster: HERO_ART || img("ph-09.svg") })}
+  ${videoSection(D.videos.home, "Veja a Bear <strong>em ação</strong>", "Como entregamos contabilidade, finanças e tributos em uma única operação integrada.", { poster: POSTER.servicos || img("ph-09.svg") })}
   <section class="sec sec--light"><div class="inner">${sectionHead({ eyebrow: METHOD.eyebrow, h2: METHOD.h2, p: METHOD.p, two: true })}${stepsBlock(METHOD.steps)}</div></section>
   ${erpSection()}
   ${faqBlock(D.faq)}
@@ -509,7 +512,7 @@ function verticalsIndex() {
 ${phead({ crumbs: [["Segmentos"]], eyebrow: "Segmentos", h1: SEGI.h2, p: SEGI.p, actions: ctaPair(WA_DEFAULT), art: HERO_ART })}
 <main id="main" class="site-main">
   <section class="sec sec--light"><div class="inner">${grid(D.verticals.map(vcard), "vgrid")}</div></section>
-  ${videoSection(D.videos.cases, "Conhecimento <strong>setorial</strong>", "Como nossos times se especializam por vertical para entregar mais do que conformidade.", { poster: HERO_ART || img("ph-06.svg") })}
+  ${videoSection(D.videos.cases, "Conhecimento <strong>setorial</strong>", "Como nossos times se especializam por vertical para entregar mais do que conformidade.", { poster: POSTER.verticais || img("ph-06.svg") })}
   ${conversion()}
 </main>`;
   return page({ key: "verticais", title: m.title, description: m.description, active: "verticais", body, path: "/verticais/", crumbs: [["Segmentos", "/verticais/"]] });
@@ -523,10 +526,10 @@ ${phead({ crumbs: [["Sobre"]], eyebrow: "Sobre a Bear", h1: A.headline, p: "", a
 <main id="main" class="site-main">
   ${A.facts?.length ? `<section class="sec sec--dark pt0"><div class="inner">${factsBlock(A.facts, "facts--3")}</div></section>` : ""}
   <section class="sec sec--light"><div class="inner split split--rev">
-    <div class="split__m reveal">${media(raster("URSO_CARA"), "Arte da Bear Finance: urso em rede neural", { ratio: "3/2", cls: "media--shadow", w: 1536, h: 1024 })}</div>
+    <div class="split__m reveal">${media(raster("URSO_CARA"), "Arte da Bear Finance: urso em rede neural", { ratio: "3/2", cls: "media--shadow media--brand", w: 1536, h: 1024 })}</div>
     <div class="split__t h2-before reveal"><h2>${A.h2}</h2>${A.p.map((p) => `<p class="lead">${p}</p>`).join("")}</div>
   </div></section>
-  ${videoSection(D.videos.sobre, "Nossa <strong>história</strong>", "De um escritório de contabilidade a uma plataforma de gestão financeira com inteligência artificial.", { poster: HERO_ART || img("ph-03.svg") })}
+  ${videoSection(D.videos.sobre, "Nossa <strong>história</strong>", "De um escritório de contabilidade a uma plataforma de gestão financeira com inteligência artificial.", { poster: POSTER.sobre || img("ph-03.svg") })}
   <section class="sec sec--soft"><div class="inner">
     ${sectionHead({ eyebrow: "Sócios", h2: "Quem está <strong>à frente</strong>", p: "Nomes, fotos e biografias serão publicados após confirmação.", two: true })}
     <div class="team reveal-group">${A.team.map(([n, r, b], i) => `<div class="team__card" style="--i:${i}"><div class="team__avatar ph">${ico("user")}</div><h3>${n}</h3><p class="role">${r}</p><p>${b}</p></div>`).join("")}</div>
@@ -610,7 +613,7 @@ function casesPage() {
 ${phead({ crumbs: [["Casos de uso"]], eyebrow: C.intro.eyebrow, h1: C.intro.h2, p: C.intro.p, art: HERO_ART })}
 <main id="main" class="site-main">
   <section class="sec sec--light"><div class="inner">${grid(C.items.map((c) => `<article class="case"><span class="case__seg">${c.segment}</span><h3>${c.title}</h3><dl><div><dt>Situação</dt><dd>${c.challenge}</dd></div><div><dt>Como atuamos</dt><dd>${c.approach}</dd></div></dl><ul class="checks">${c.deliverables.map((d) => `<li>${d}</li>`).join("")}</ul><a class="link" href="/verticais/${segOf(c.segment)?.slug || ""}/">Ver o segmento ${ico("arrow-right")}</a></article>`))}</div></section>
-  ${videoSection(D.videos.cases, "Como atuamos <strong>por setor</strong>", "Veja como organizamos times, rotinas e tecnologia para cada mercado.", { poster: HERO_ART || img("ph-02.svg") })}
+  ${videoSection(D.videos.cases, "Como atuamos <strong>por setor</strong>", "Veja como organizamos times, rotinas e tecnologia para cada mercado.", { poster: POSTER.cases || img("ph-02.svg") })}
   ${conversion()}
 </main>`;
   return page({ key: "cases", title: m.title, description: m.description, active: "sobre", body, path: "/cases/", crumbs: [["Casos de uso", "/cases/"]] });
@@ -657,7 +660,7 @@ ${phead({ crumbs: [["Contato"]], eyebrow: "Contato", h1: "Fale com a <strong>Bea
     </div>
   </div></section>
   <section class="sec sec--soft"><div class="inner">${sectionHead({ eyebrow: "Unidades", h2: "Onde <strong>estamos</strong>", two: false })}<div class="grid2 reveal-group">${PRES.offices.map(([c, a, t], i) => `<div class="office" style="--i:${i}"><h3>${c}</h3><p>${a}</p>${t ? `<p><a href="${S.phoneHref}">${t}</a></p>` : ""}${i === 0 ? `<a class="link" href="${mapsUrl}" target="_blank" rel="noopener">Como chegar ${ico("external")}</a>` : ""}</div>`).join("")}</div></div></section>
-  ${videoSection(D.videos.contato, "Como funciona o <strong>primeiro contato</strong>", "Diagnóstico, proposta e onboarding: o que acontece em cada etapa.", { poster: HERO_ART || img("ph-01.svg") })}
+  ${videoSection(D.videos.contato, "Como funciona o <strong>primeiro contato</strong>", "Diagnóstico, proposta e onboarding: o que acontece em cada etapa.", { poster: POSTER.contato || img("ph-01.svg") })}
   ${faqBlock(D.faq)}
 </main>`;
   return page({ key: "contato", title: m.title, description: m.description, active: "contato", body, path: "/contato/", crumbs: [["Contato", "/contato/"]], jsonld: [faqLd(D.faq)] });
@@ -762,7 +765,7 @@ ${curve("#programas")}
       ${H.compare.map(([k, a, b]) => `<div class="compare-row" role="row"><div role="rowheader">${k}</div><div role="cell" data-th="${D.partnerPrograms[0].name}">${a}</div><div role="cell" data-th="${D.partnerPrograms[1].name}">${b}</div></div>`).join("")}
     </div>
   </div></section>
-  ${videoSection(H.video, "Parcerias <strong>Bear</strong>", "Veja em poucos minutos como funcionam os dois programas e qual combina mais com você.", { poster: HERO_ART || img("ph-06.svg") })}
+  ${videoSection(H.video, "Parcerias <strong>Bear</strong>", "Veja em poucos minutos como funcionam os dois programas e qual combina mais com você.", { poster: POSTER.parcerias || img("ph-06.svg") })}
   ${ctaBand("Ficou com dúvida sobre qual programa escolher? <strong>Fale com o time de parcerias.</strong>", { btn: "WhatsApp de parcerias", href: hubWa })}
   ${faqBlock(H.faq)}
 </main>`;
@@ -789,7 +792,7 @@ ${phead({ crumbs: [["Parcerias", "/parcerias/"], [pr.name]], eyebrow: pr.tag, h1
   </div></section>
   <section class="sec sec--soft"><div class="inner split split--even">
     <div class="split__t h2-before reveal"><h2>${pr.benefits.h2}</h2><p class="lead">${pr.benefits.p}</p><ul class="benefits">${pr.benefits.items.map((b) => `<li>${b}</li>`).join("")}</ul></div>
-    <div class="reveal">${videoBox({ ...pr.video, poster: HERO_ART || img("ph-06.svg") })}</div>
+    <div class="reveal">${videoBox({ ...pr.video, poster: POSTER.parcerias || img("ph-06.svg") })}</div>
   </div></section>
   <section class="sec sec--light"><div class="inner">${sectionHead({ eyebrow: "Etapas", h2: "Simplicidade <strong>e transparência</strong>", p: "A entrada no programa foi desenhada para você começar rápido, com regras claras desde o primeiro dia.", two: true })}${stepsBlock(pr.steps.map(([title, text]) => ({ title, text })))}</div></section>
   ${ctaBand(pr.cta, { btn: D.partnerWhatsapp.display, href: prWa })}

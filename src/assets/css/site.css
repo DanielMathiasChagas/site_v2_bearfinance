@@ -327,6 +327,7 @@ body.is-scrolled .hdr { background: rgba(7, 5, 13, .84); -webkit-backdrop-filter
 .media--square { --ratio: 1; } .media--wide { --ratio: 16 / 9; } .media--tall { --ratio: 4 / 5; } .media--circle { --ratio: 1; border-radius: 50%; }
 .media.kb img { animation: kb 28s ease-in-out infinite alternate; transform-origin: 60% 40%; }
 .media--shadow { box-shadow: var(--sh-violet); }
+.media--brand img { filter: hue-rotate(48deg) saturate(.9); }
 @keyframes kb { from { scale: 1; } to { scale: 1.12; } }
 
 /* placeholder (marketing substitui) */
