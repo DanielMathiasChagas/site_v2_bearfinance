@@ -755,7 +755,7 @@ function partnerForm(pr) {
       <div class="pform-actions"><button type="button" class="pform-back" data-prev>${ico("arrow-left")} Voltar</button><button type="submit" class="btn btn--wa">${ico("whatsapp")} Continuar no WhatsApp</button></div>
     </fieldset>
     <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
-    <div class="pform-done" hidden>${ico("whatsapp")}<h4>Tudo certo!</h4><p>Abrimos o WhatsApp com a sua mensagem pronta. É só tocar em <strong>enviar</strong>.</p><a class="btn btn--wa" data-wa-open href="${waLink()}" target="_blank" rel="noopener">${ico("whatsapp")} Abrir WhatsApp novamente</a></div>
+    <div class="pform-done" hidden>${ico("whatsapp")}<h3>Tudo certo!</h3><p>Abrimos o WhatsApp com a sua mensagem pronta. É só tocar em <strong>enviar</strong>.</p><a class="btn btn--wa" data-wa-open href="${waLink()}" target="_blank" rel="noopener">${ico("whatsapp")} Abrir WhatsApp novamente</a></div>
     <p class="form__msg" role="status" aria-live="polite"></p>
   </form>
   <p class="pform-foot">Prefere ir direto? <a href="${waLink(`Olá! Quero saber mais sobre o programa ${pr.name} da Bear Finance.`)}" target="_blank" rel="noopener">${ico("whatsapp")} ${D.partnerWhatsapp.display}</a></p>

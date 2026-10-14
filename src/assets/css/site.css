@@ -363,10 +363,12 @@ body.hide-ph .ph::after { display: none; }
 .carousel__track::-webkit-scrollbar { display: none; }
 .carousel__track:focus-visible { outline-offset: 6px; }
 .carousel__item { flex: 0 0 calc((100% - 44px) / 3); scroll-snap-align: start; min-width: 0; }
-.carousel__dots { display: flex; justify-content: center; gap: 6px; margin-top: 8px; }
-.carousel__dots button { position: relative; width: 8px; height: 8px; border-radius: 4px; border: 0; padding: 0; background: var(--ink-700); opacity: .6; cursor: pointer; transition: all .3s var(--ease); }
-.carousel__dots button::before { content: ""; position: absolute; inset: -9px; }
-.carousel__dots button[aria-current="true"] { width: 26px; background: var(--violet-500); opacity: 1; }
+.carousel__dots { display: flex; justify-content: center; gap: 2px; margin-top: 4px; }
+.carousel__dots button { position: relative; width: 24px; height: 24px; border: 0; padding: 0; background: none; cursor: pointer; }
+.carousel__dots button::before { content: ""; position: absolute; left: 50%; top: 50%; width: 8px; height: 8px; border-radius: 4px; transform: translate(-50%, -50%); background: var(--ink-500); opacity: .6; transition: all .3s var(--ease); }
+.carousel__dots button[aria-current="true"]::before { width: 26px; background: var(--violet-600); opacity: 1; }
+.carousel__dots button:focus-visible { outline: none; }
+.carousel__dots button:focus-visible::before { box-shadow: 0 0 0 3px rgba(124, 58, 237, .5); }
 @media (max-width: 991px) { .carousel__item { flex-basis: calc((100% - 22px) / 2); } }
 @media (max-width: 639px) { .carousel__item { flex-basis: 86%; } .carousel { padding: 0 16px; } }
 @media (prefers-reduced-motion: reduce) { .carousel__track { scroll-behavior: auto; } }
@@ -780,7 +782,7 @@ body.hide-ph .ph::after { display: none; }
 .pform-back .i { width: 16px; height: 16px; }
 .pform-done { text-align: center; padding: 10px 0 16px; animation: step-in .45s var(--ease); }
 .pform-done > .i { width: 46px; height: 46px; color: var(--wa); margin: 0 auto; }
-.pform-done h4 { font-size: 22px; font-weight: 800; margin: 8px 0 6px; }
+.pform-done h3 { font-size: 22px; font-weight: 800; margin: 8px 0 6px; }
 .pform-done p { font-size: 15px; }
 .pform .message, .pform .form__msg { margin: 0; min-height: 0; }
 .pform-foot { margin: 0; padding: 14px 28px 20px; border-top: 1px solid var(--line); font-size: 14px; color: var(--ink-500); text-align: center; }
