@@ -10,7 +10,7 @@ npm run build      # gera /public
 npm start          # sobe o servidor (PORT=3000 por padrão)
 npm run dev        # build + servidor
 npm test           # testes do servidor (node --test)
-node --test tests/e2e/      # E2E com o Chrome instalado (precisa do servidor em PORT=3300)
+npm run test:e2e           # E2E (node tests/e2e/run.mjs sobe o servidor em 3300, roda e derruba)
 node scripts/shots.mjs docs/qa/screenshots/depois   # varredura: overflow, console, screenshots (servidor em 3100)
 node src/make-art.mjs       # regenera as ilustrações SVG (determinístico)
 node scripts/contact-sheet.mjs saida.png             # folha de contato das ilustrações
@@ -53,4 +53,4 @@ limita envios por IP e por e-mail, grava em `data/*.jsonl` e encaminha para `LEA
 
 ## Dependências externas (CDN)
 
-Apenas Google Fonts (Plus Jakarta Sans). Font Awesome e Swiper foram removidos (ícones inline e carrossel nativo com scroll-snap).
+Nenhuma em produção: fonte Plus Jakarta Sans self-hosted (`src/assets/fonts/`, fallback para Google Fonts só se os arquivos faltarem), ícones SVG inline e carrossel nativo com scroll-snap. O YouTube (nocookie) só é chamado quando um vídeo é reproduzido.

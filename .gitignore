@@ -1,3 +1,6 @@
 public/
 data/
 node_modules/
+.env
+.env.*
+!.env.example

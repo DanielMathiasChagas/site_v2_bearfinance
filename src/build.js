@@ -62,6 +62,8 @@ const PLAT_ART = art("tech-plataforma.svg");
 const HERO_ART = art("hero-neural.svg");
 const CTA_ART = art("cta-banner.svg");
 const OG_URL = S.url + img(has("img/og-image.jpg") ? "og-image.jpg" : "og-image.png");
+// Marcas de ERP só aparecem depois de confirmadas pelo cliente (site.erpsConfirmed); até lá, categorias de integração.
+const ERP_CHIPS = S.erpsConfirmed ? D.erps : ["ERPs nacionais e internacionais", "Sistemas financeiros e de faturamento", "Folha de pagamento e ponto", "E-commerce e marketplaces", "Bancos e Open Finance", "Planilhas e extratos"];
 // pôsteres de vídeo por página (variados, para não repetir a mesma arte)
 const POSTER = { home: HERO_ART, sobre: art("svc-estruturacoes.svg"), cases: art("seg-industria.svg"), contato: art("svc-contabilidade.svg"), parcerias: art("svc-bpo-financeiro.svg"), plataforma: PLAT_ART, esg: art("seg-energia.svg"), verticais: art("seg-agronegocio.svg"), servicos: PLAT_ART };
 const raster = (base) => (has(`img/${base}.webp`) ? img(`${base}.webp`) : img(`${base}.jpg`));
@@ -273,11 +275,14 @@ const faqBlock = (items, { title = "Perguntas <strong>frequentes</strong>", lead
 </div></section>`;
 
 const erpSection = (h2 = "Operamos no <strong>ERP que a sua empresa já usa</strong>", p = "Integração com os principais sistemas de gestão do mercado, sem retrabalho e sem duplicidade de lançamentos.") => `
-<section id="erps" class="sec sec--soft"><div class="inner">${sectionHead({ eyebrow: "Integrações", h2, p, two: true })}<ul class="erps reveal-group" aria-label="ERPs integrados">${D.erps.map((e, i) => `<li style="--i:${i}">${ico("cube")}${e}</li>`).join("")}</ul></div></section>`;
+<section id="erps" class="sec sec--soft"><div class="inner">${sectionHead({ eyebrow: "Integrações", h2, p, two: true })}<ul class="erps reveal-group" aria-label="Sistemas e integrações">${ERP_CHIPS.map((e, i) => `<li style="--i:${i}">${ico("cube")}${e}</li>`).join("")}</ul></div></section>`;
 
 const quoteBand = (html) => `<section class="band band--quote"><div class="inner reveal">${ico("quote")}<p>${html}</p></div></section>`;
-const ctaBand = (text, { btn = "Solicitar diagnóstico", href = "#diagnostico", waText = "" } = {}) => `
-<section class="band band--cta"><div class="inner"><p class="reveal">${text}</p><div class="actions reveal"><a class="btn" href="${href}" data-track="cta_click">${btn} ${ico("arrow-right")}</a>${waText ? `<a class="wa-inline" href="${wa(waText)}" target="_blank" rel="noopener" data-track="whatsapp_click">${ico("whatsapp")} WhatsApp</a>` : ""}</div></div></section>`;
+const ctaBand = (text, { btn = "Solicitar diagnóstico", href = "#diagnostico", waText = "" } = {}) => {
+  const ext = /^https?:\/\//.test(href);
+  return `
+<section class="band band--cta"><div class="inner"><p class="reveal">${text}</p><div class="actions reveal"><a class="btn${ext ? " btn--wa" : ""}" href="${href}"${ext ? ' target="_blank" rel="noopener"' : ""} data-track="${ext ? "whatsapp_click" : "cta_click"}">${ext ? ico("whatsapp") : ""}${btn}${ext ? "" : " " + ico("arrow-right")}</a>${waText ? `<a class="wa-inline" href="${wa(waText)}" target="_blank" rel="noopener" data-track="whatsapp_click">${ico("whatsapp")} WhatsApp</a>` : ""}</div></div></section>`;
+};
 
 const platformTeaser = () => `
 <section class="sec teaser"><div class="inner">
@@ -667,7 +672,7 @@ function contact() {
   const steps = METHOD.steps.slice(0, 3);
   const mapsUrl = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent("Rua Riachuelo, 231, Sé, São Paulo - SP");
   const body = `
-${phead({ crumbs: [["Contato"]], eyebrow: "Contato", h1: "Fale com a <strong>Bear</strong>", p: "Diagnóstico sem custo, WhatsApp e e-mail. Escolha o canal; a resposta vem de um especialista do seu setor.", cls: "phead--short" })}
+${phead({ crumbs: [["Contato"]], eyebrow: "Contato", h1: "Fale com a <strong>Bear</strong>", p: "Diagnóstico inicial, WhatsApp e e-mail. Escolha o canal; a resposta vem de um especialista do seu setor.", cls: "phead--short" })}
 <main id="main" class="site-main">
   <section id="diagnostico" class="sec sec--dark conv"><div class="inner conv__in">
     <div class="conv__form reveal">${diagForm({ level: 2 })}</div>
@@ -830,7 +835,7 @@ ${phead({ crumbs: [["Parcerias", "/parcerias/"], [pr.name]], eyebrow: pr.tag, h1
 function privacy() {
   const m = seo("privacidade", `Política de Privacidade | ${S.name}`, "Como a Bear Finance trata dados pessoais e cookies, conforme a LGPD.");
   const body = `
-${phead({ crumbs: [["Política de Privacidade"]], eyebrow: "Privacidade", h1: "Como tratamos <strong>os seus dados</strong>", p: "Conforme a Lei 13.709/2018 (Lei Geral de Proteção de Dados). Última atualização: ${fmtDate(TODAY)}.", cls: "phead--short" })}
+${phead({ crumbs: [["Política de Privacidade"]], eyebrow: "Privacidade", h1: "Como tratamos <strong>os seus dados</strong>", p: `Conforme a Lei 13.709/2018 (Lei Geral de Proteção de Dados). Última atualização: ${fmtDate(S.privacyUpdated || TODAY)}.`, cls: "phead--short" })}
 <main id="main" class="site-main"><section class="sec sec--light"><div class="inner"><article class="article">
   <h2>1. Controlador</h2><p>${S.name}${S.razaoSocial ? ` (${S.razaoSocial}${S.cnpj ? `, CNPJ ${S.cnpj}` : ""})` : ""}, com sede em ${S.address}, ${S.city}. Contato para assuntos de privacidade: <a href="mailto:${S.email}">${S.email}</a>.</p>
   <h2>2. Dados que coletamos</h2><ul><li><strong>Formulários:</strong> nome, empresa, e-mail, telefone, segmento, serviço de interesse e mensagem (diagnóstico); nome, e-mail, empresa e telefone (newsletter); nome, e-mail, telefone, link de currículo e mensagem (candidaturas); dados do formulário de parcerias.</li><li><strong>Navegação:</strong> endereço IP, páginas acessadas e dados técnicos do navegador, registrados nos logs do servidor para segurança e prevenção de abuso.</li><li><strong>Cookies:</strong> apenas os essenciais para o funcionamento do site e a lembrança da sua escolha sobre cookies.</li></ul>
@@ -874,7 +879,7 @@ const pages = [
 ];
 for (const [p, html] of pages) await out(p, html);
 
-const urls = pages.filter(([p]) => !p.endsWith(".html")).map(([p, , lm]) => [p === "/" ? "/" : `/${p}/`, lm || TODAY]);
-await writeFile(join(OUT, "sitemap.xml"), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map(([u, lm]) => `  <url><loc>${S.url}${u}</loc><lastmod>${lm}</lastmod></url>`).join("\n")}\n</urlset>\n`);
+const urls = pages.filter(([p]) => !p.endsWith(".html")).map(([p, , lm]) => [p === "/" ? "/" : `/${p}/`, lm || ""]); // lastmod só quando há data de conteúdo
+await writeFile(join(OUT, "sitemap.xml"), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map(([u, lm]) => `  <url><loc>${S.url}${u}</loc>${lm ? `<lastmod>${lm}</lastmod>` : ""}</url>`).join("\n")}\n</urlset>\n`);
 await writeFile(join(OUT, "robots.txt"), `User-agent: *\nAllow: /\nSitemap: ${S.url}/sitemap.xml\n`);
 console.log(`✓ ${pages.length} páginas geradas em /public`);

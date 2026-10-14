@@ -9,12 +9,12 @@
     "start": "node server.js",
     "dev": "node src/build.js && node server.js",
     "test": "node --test tests/server.test.js",
-    "test:e2e": "node --test tests/e2e/",
+    "test:e2e": "node tests/e2e/run.mjs",
     "art": "node src/make-art.mjs",
     "sweep": "node scripts/shots.mjs docs/qa/screenshots/depois"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=20.6"
   },
   "devDependencies": {
     "axe-core": "^4.10.3",

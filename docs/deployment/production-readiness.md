@@ -10,7 +10,7 @@
 
 ## 2. Requisitos
 
-- Node.js ≥ 20 (desenvolvido com 24). Sem dependências de produção (`npm ci` só instala ferramentas de teste).
+- Node.js ≥ 20.6 (desenvolvido com 24; `engines` no `package.json`). Sem dependências de produção (`npm ci` só instala ferramentas de teste).
 - Uma instância do servidor (o limite por IP/e-mail é em memória; com várias instâncias, coloque o limite no proxy/WAF ou use um único processo).
 - HTTPS no proxy reverso (nginx, Caddy, Cloudflare) encaminhando `X-Forwarded-Proto: https` e `X-Forwarded-For`; defina `TRUST_PROXY=1` (número de proxies confiáveis).
 
@@ -19,7 +19,7 @@
 | Variável | Obrigatória | Função |
 |---|---|---|
 | `PORT` | não (3000) | porta HTTP |
-| `TRUST_PROXY` | sim atrás de proxy | nº de proxies para ler o IP real |
+| `TRUST_PROXY` | sim | nº de proxies para ler o IP real (`1` atrás de um proxy; **`0` quando o Node é exposto diretamente** — nunca deixe o modo automático em produção) |
 | `FORCE_HSTS` | não | `1` força HSTS mesmo sem `X-Forwarded-Proto` |
 | `LEADS_WEBHOOK_URL` | não | encaminha cada lead (JSON) para CRM/n8n/Zapier |
 | `SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, LEADS_TO, LEADS_FROM` | não (recomendado) | entrega dos leads por e-mail; só ativa com as seis definidas |
@@ -73,7 +73,7 @@ location / { proxy_pass http://127.0.0.1:3000; proxy_set_header X-Forwarded-Prot
 - [ ] IDs de vídeo do YouTube em `src/data.js` → `videos` e `services[].video` (hoje todos "em breve").
 - [ ] Fotos reais de sócios/equipe (hoje placeholders honestos) e, se desejado, logos de clientes com autorização.
 - [ ] Ferramenta de analytics (se houver): o site já publica eventos em `window.dataLayer` (`cta_click`, `whatsapp_click`, `form_submit_ok`, `cookie_choice`); basta incluir o GTM respeitando a escolha de cookies.
-- [ ] Rodar `npm test`, `node --test tests/e2e/` e Lighthouse na homologação final.
+- [ ] Rodar `npm test`, `npm run test:e2e` e Lighthouse na homologação final.
 - [ ] Registrar a release (tag) e o `public/` anterior para rollback.
 
 ## 7. Operação

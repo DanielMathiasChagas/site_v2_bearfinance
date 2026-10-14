@@ -11,6 +11,9 @@
 
 export const site = {
   name: "Bear Finance",
+  privacyUpdated: "2026-10-14", // data de revisão do texto da Política de Privacidade (não a do build)
+  erpsConfirmed: false,        // [A CONFIRMAR] true só depois de a Bear confirmar a lista `erps`; até lá o site mostra categorias
+  socialConfirmed: false,      // [A CONFIRMAR] true só depois de confirmar os perfis (instagram/linkedin/youtube) — vazios até lá
   tagline: "Contabilidade consultiva, BPO financeiro e inteligência tributária para a sua empresa crescer",
   description: "A Bear Finance une contabilidade consultiva, BPO financeiro e de folha, auditoria, consultoria tributária e estruturações corporativas a uma plataforma própria com IA, com sede em São Paulo e atendimento digital em todo o Brasil.",
   url: "https://www.bearfinance.com.br",
@@ -20,9 +23,9 @@ export const site = {
   whatsappNumber: "5511983148774",            // só dígitos; o build gera wa.me/<n>?text=
   whatsapp: "https://wa.me/5511983148774",
   // [A CONFIRMAR] perfis oficiais nas redes sociais
-  instagram: "https://instagram.com/bearfinance",
-  linkedin: "https://www.linkedin.com/company/bearfinance",
-  youtube: "https://www.youtube.com/@bearfinance",
+  instagram: "",
+  linkedin: "",
+  youtube: "",
   address: "Rua Riachuelo, 231 – 4º andar, Sé, 01007-000",
   city: "São Paulo – SP",
   // [A CONFIRMAR] razão social e CNPJ para o rodapé e a política de privacidade
@@ -32,7 +35,7 @@ export const site = {
   // [A CONFIRMAR] URL oficial do Complexo DMC (rodapé: "Integra o ecossistema Complexo DMC")
   dmcUrl: "",
   // [A CONFIRMAR] URL de acesso da Plataforma Bear para clientes
-  platformUrl: "https://www.bearfinance.com.br",
+  platformUrl: "",
   heroVideo: "",                 // URL de um .mp4 para o fundo do topo (vazio = usa a imagem)
   heroImage: "hero.svg",
   headlineFx: true,              // ondas animadas também no topo das páginas internas
@@ -131,7 +134,7 @@ export const conversion = {
   bullets: [
     "Um especialista do seu setor analisa o cenário e entra em contato para entender os detalhes",
     "Você recebe uma leitura objetiva: riscos, oportunidades e próximos passos",
-    "Proposta sob medida, com escopo e investimento claros, sem compromisso",
+    "Proposta sob medida, com escopo e investimento claros, com clareza desde o início",
   ],
   primary: { label: "Solicitar diagnóstico", href: "/contato/#diagnostico" },
   whatsappText: "Olá! Quero solicitar um diagnóstico da Bear Finance para a minha empresa.",
@@ -451,7 +454,7 @@ export const presence = {
   p: "Com sede em <strong>São Paulo</strong> e operação digital, atendemos empresas em <strong><span class='text-lilas'>todos os estados brasileiros</span></strong> com a mesma rotina: plataforma, integrações e um time que conhece o seu setor.",
   facts: [
     { value: "SP", label: "sede em São Paulo" },
-    { value: "27", label: "estados e DF com atendimento digital" },
+    { value: "27", label: "unidades da federação com atendimento digital" },
     { value: "100%", label: "operação digital e integrada" },
     { value: "1", label: "time dedicado por cliente" },
   ],
@@ -543,7 +546,7 @@ export const cases = {
 // [A CONFIRMAR] programas formais: compensação de emissões, coletivos de diversidade,
 // canal de denúncias, auditoria interna e publicação de relatório ESG.
 export const esg = {
-  headline: "Cultura baseada em<br>princípios de <strong>ESG</strong>",
+  headline: "Responsabilidade ambiental, social<br>e de governança <strong>na prática</strong>",
   pillars: [["leaf", "Ambiental", "Operação digital, documentos eletrônicos e menos deslocamentos: a rotina contábil roda com o mínimo de papel e de viagens."], ["people", "Social", "Formação de profissionais em início de carreira e um ambiente de respeito à diversidade, dentro do time e no atendimento aos clientes."], ["scale", "Governança", "Código de conduta, segregação de funções, controle de acesso aos dados dos clientes e revisão em duas camadas em cada entrega."]],
   p: ["Acreditamos que uma empresa de contabilidade tem papel direto na governança dos seus clientes, e que isso começa em casa: nos nossos controles, no tratamento dos dados e na forma como tomamos decisões.", "Revisamos nossas práticas periodicamente e compartilhamos com clientes e colaboradores o que mudou e o que ainda está em construção."],
 };
@@ -553,7 +556,7 @@ export const platform = {
   headline: "Gestão financeira com<br><strong>inteligência artificial</strong>",
   p: "A plataforma própria da Bear concilia, classifica e organiza a informação financeira da sua empresa, integrada a bancos e ERPs, com dashboards e alertas para você decidir com dados atualizados.",
   features: [["chart-bar", "Relatórios atualizados", "DRE, fluxo de caixa e indicadores gerados a partir dos lançamentos conciliados."], ["bank", "Integração bancária", "Extratos importados automaticamente e conciliados com os lançamentos previstos."], ["users-gear", "Folha integrada", "Folha, férias e encargos refletidos na contabilidade e nas provisões."], ["gauge", "Dashboard financeiro", "Receitas, despesas, caixa projetado e indicadores em painéis atualizados."], ["cpu", "IA integrada", "Classificação de lançamentos, sugestão de conciliação e alertas de inconsistência e de compliance."], ["lock", "Segurança e LGPD", "Controle de acesso por perfil, dados protegidos e registro das ações realizadas."]],
-  steps: [["Diagnóstico", "Entendemos sua operação, regime, sistemas e dores em uma conversa sem custo."], ["Proposta sob medida", "Escopo, prazos e investimento conforme o porte e a complexidade."], ["Onboarding", "Migração de dados, integração com bancos e ERP e definição de rotinas e alçadas."], ["Gestão contínua", "Entregas mensais, dashboards atualizados e reuniões de resultado."]],
+  steps: [["Diagnóstico", "Entendemos sua operação, regime, sistemas e dores em uma conversa inicial."], ["Proposta sob medida", "Escopo, prazos e investimento conforme o porte e a complexidade."], ["Onboarding", "Migração de dados, integração com bancos e ERP e definição de rotinas e alçadas."], ["Gestão contínua", "Entregas mensais, dashboards atualizados e reuniões de resultado."]],
 };
 
 export const erpOptions = ["TOTVS Protheus", "TOTVS Winthor", "SAP Business One", "Omie", "Conta Azul", "Bling", "Sankhya", "Senior", "Outros", "Não temos um ERP"];
@@ -573,7 +576,7 @@ export const partnerFacts = [
   { value: "IA", label: "plataforma própria para a sua carteira" },
   { value: "2", label: "camadas de revisão técnica em cada entrega" },
   { value: "8", label: "verticais com especialistas" },
-  { value: "100%", label: "da carteira protegida em contrato" },
+  { value: "6", label: "etapas claras, do cadastro ao crescimento da parceria" },
 ];
 const partnerFactsBP = [
   { value: "IA", label: "plataforma própria por trás de cada entrega" },

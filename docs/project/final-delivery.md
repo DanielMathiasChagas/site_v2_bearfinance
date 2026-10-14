@@ -1,6 +1,6 @@
 # Entrega final — Bear Finance v2
 
-**Data:** 14/10/2026 · **Branch:** `redesign/v2` (baseline v1 preservada em `main`) · **Status geral:** ver tabela e parecer em `docs/qa/technical-review.md`.
+**Data:** 14/10/2026 · **Branch:** `redesign/v2` (baseline v1 preservada em `main`) · **Status geral:** **PRONTO COM RESSALVAS** (código, testes e auditorias aprovados; ressalvas = pendências de conteúdo/credenciais do cliente listadas em §9; publicação em produção não autorizada nem realizada). Pareceres: `docs/qa/technical-review-independente.md` (agente revisor) e `docs/qa/technical-review.md` (orquestrador, com a resolução dos achados).
 
 ## 1. Resumo executivo
 
@@ -24,7 +24,7 @@ O site deixou de ser um clone estrutural com placeholders e métricas fictícias
 | SEO técnico | OG 500², sem BreadcrumbList/Article/Service, sitemap sem lastmod | Títulos ≤ 60 (exceto 6 posts longos, decisão editorial), descrições 140–160, OG 1200×630 (JPEG) com alt, Twitter card, favicon SVG + apple-touch-icon, JSON-LD Organization/AccountingService (telefone E.164, `sameAs` só após confirmação), BreadcrumbList, FAQPage, Service, Article com imagem; sitemap com lastmod por página | Lighthouse SEO **100** nas 5 páginas | Aprovado | Encurtar títulos dos posts se desejado |
 | Performance | FA + webfont de terceiro, Swiper via CDN (404), WebGL em todas as páginas, sem lazy/size em imagens, FCP mobile 2,5 s | Sem FA nem Swiper (carrossel nativo), fonte self-hosted com preload, WebGL só na home, mapa Canvas só em desktop, imagens com dimensões/lazy, assets versionados com cache imutável, gzip/brotli | Lighthouse Performance **100** mobile e desktop nas 5 páginas; LCP 1,4–1,8 s mobile; CLS 0 (`docs/qa/lighthouse/final/`) | Aprovado | — |
 | QA E2E | Nenhum teste | Suíte Playwright (Chrome do sistema) em `tests/e2e/` (12 arquivos, 93 casos) + relatório; 3 falhas da 1ª execução corrigidas | `docs/qa/test-report.md`, `docs/qa/e2e-run.log` → **93/93**; 49 capturas em `docs/qa/screenshots/depois/` | Aprovado | Passe manual em Safari/Firefox (não disponíveis no ambiente) |
-| Revisão independente | — | Parecer de prontidão | `docs/qa/technical-review.md` | Ver parecer | — |
+| Revisão independente | — | Parecer do agente `technical-reviewer` (reproduziu build, 26+93 testes, varredura, Lighthouse e sondas de segurança): veredito inicial **NÃO PRONTO** por 3 achados altos (data literal na Política de Privacidade, `.env` fora do `.gitignore`, itens `[A CONFIRMAR]` renderizados) e 6 médios — **todos corrigidos** em seguida e reverificados (build, 26/26, 93/93, varredura, Lighthouse) | `docs/qa/technical-review-independente.md`, `docs/qa/technical-review.md` §5 | Aprovado com ressalvas do cliente | Confirmar CNPJ, perfis, ERPs, vídeos, fotos, SMTP |
 | Implantação | Sem documentação | Runbook com env, systemd/nginx, rollback, checklist | `docs/deployment/production-readiness.md` | Aprovado (documentado) | Autorização para publicar |
 
 ## 3. Arquivos alterados / criados
@@ -67,7 +67,7 @@ Razão social/CNPJ; URL do Complexo DMC; perfis sociais; IDs dos vídeos; fotos 
 ```bash
 npm ci && npm run build && npm test
 PORT=3100 node server.js      # http://localhost:3100
-node --test tests/e2e/        # servidor em PORT=3300
+npm run test:e2e              # sobe o servidor em 3300, roda os 93 casos e derruba
 node scripts/shots.mjs docs/qa/screenshots/depois
 ```
 

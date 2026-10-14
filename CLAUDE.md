@@ -13,5 +13,5 @@ Gerador estático Node sem dependências: `src/data.js` → `src/build.js` → `
 ## Propriedade de arquivos (evitar conflito)
 build.js / site.css / site.js → orquestrador · brmap.js/css → frontend-architect · server.js + tests/server.test.js → backend-engineer · data.js → accounting-marketing · img/art + icons.js → creative-director · tests/e2e → qa-tester.
 
-## Checkpoint (14/10/2026, 19:40)
-Fases 1–6 concluídas e commitadas em `redesign/v2`: build 34 páginas, `npm test` 26/26, E2E `node tests/e2e/run.mjs` 93/93, varredura limpa, Lighthouse 100/100/100/100 (5 páginas). Docs completos em `docs/`. Pendente: parecer do agente technical-reviewer (`docs/qa/technical-review-independente.md`), rebuild após ajuste em `data.js` (fato do Business Partner) e commit final. Publicação em produção NÃO autorizada/feita. Pendências do cliente em `docs/project/final-delivery.md` §9.
+## Checkpoint (14/10/2026, final)
+Entrega concluída na branch `redesign/v2`: build 34 páginas, `npm test` 26/26, `npm run test:e2e` 93/93, varredura limpa, Lighthouse 100/100/100/100 (5 páginas), parecer independente com achados corrigidos. Status: PRONTO COM RESSALVAS (pendências do cliente em `docs/project/final-delivery.md` §9). Publicação em produção NÃO autorizada/feita. Para retomar: `docs/project/backlog.md` e `docs/qa/technical-review.md` §5 (melhorias futuras: CSS morto, flutuante no mobile, capturas longas).

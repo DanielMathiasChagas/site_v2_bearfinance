@@ -20,7 +20,7 @@
 | R8 | info | `src/assets/img/art/hero-neural.svg` 91 KB (gzip ≈ 25 KB) com `fetchpriority=high` | Peso aceitável: LCP mobile medido 1,4 s | Lighthouse final | — |
 | R9 | info | Agentes | backend-engineer, creative-director, frontend-architect (mapa) e qa-tester caíram com HTTP 429; entregas parciais foram concluídas pelo orquestrador | `docs/project/backlog.md` registro | — |
 
-Nenhum achado bloqueador ou de severidade alta em aberto.
+No momento desta verificação não foram identificados achados altos; o parecer independente (`technical-review-independente.md`) encontrou três (A1–A3) que esta verificação deixou passar — todos corrigidos em seguida (ver §5).
 
 ## 3. Verificações reproduzidas (saída real)
 
@@ -43,7 +43,7 @@ $ npx lighthouse (docs/qa/lighthouse/final/*.report.json)
 home 100/100/100/100 mobile (LCP 1,4 s, CLS 0) · servico, segmento, contato, parceria 100/100/100/100 mobile e desktop
 
 $ grep -rniE "(api[_-]?key|secret|password|passwd|token)\s*[:=]\s*['\"][^'\"]{4,}" (sem node_modules/public) → nenhum resultado
-$ git ls-files | grep -E "^\.env$|data/" → nenhum (segredos e leads fora do git)
+$ git ls-files | grep -E "^\.env$|data/" → nenhum (leads fora do git). Correção após o parecer independente: `.env`/`.env.*` adicionados ao `.gitignore` (antes só `public/`, `data/`, `node_modules/`).
 $ grep -c "fa-" public/index.html → 0 (Font Awesome removido)
 $ grep -nE "\+ ?[0-9]{2,}|NPS|[0-9]{2,3} ?%" src/data.js → só "100% operação digital" e "100% da carteira protegida em contrato" (capacidades, não métricas de clientes)
 $ grep -niE "planning|somos a ponte" src/ → nenhum
@@ -68,5 +68,29 @@ Capturas inspecionadas pelo orquestrador: `docs/qa/screenshots/orquestrador/{hom
 | Auditoria de acessibilidade executada | ✔ | axe (E2E 12) + Lighthouse A11y 100 |
 | Testes automatizados críticos aprovados | ✔ | 26/26 + 93/93 |
 | Performance documentada | ✔ | `docs/qa/performance-report.md` + `docs/qa/lighthouse/` |
-| Sem segredos expostos | ✔ | grep + `.gitignore` (`.env`, `data/`) |
-| Parecer do revisor | ◐ | este documento (orquestrador) + `technical-review-independente.md` (agente) |
+| Sem segredos expostos | ✔ | grep limpo; `.gitignore` com `.env`, `.env.*`, `data/` (corrigido após A2 do parecer independente) |
+| Parecer do revisor | ✔ | `technical-review-independente.md` (agente, veredito inicial NÃO PRONTO → condições A1–A5 cumpridas, ver §5) + este documento |
+
+## 5. Achados do parecer independente e resolução (14/10/2026, 20:00–20:30)
+
+| ID (parecer) | Sev. | Resolução |
+|---|---|---|
+| A1 Política de Privacidade com `${fmtDate(TODAY)}` literal | alta | Corrigido: template literal + `site.privacyUpdated` (data de revisão do texto, não do build) |
+| A2 `.env` fora do `.gitignore` | alta | Corrigido: `.env`, `.env.*`, `!.env.example` |
+| A3 itens `[A CONFIRMAR]` renderizados | alta | Corrigido: ERPs viram categorias de integração até `site.erpsConfirmed`; tile "100% da carteira" → "6 etapas…"; perfis sociais vazios até confirmação (rodapé omite ícones); `platformUrl` vazio (botão omitido) |
+| A4 H1 de ESG copiado da referência | média | Corrigido: "Responsabilidade ambiental, social e de governança na prática" |
+| A5 `npm run test:e2e` quebrado no Node 24 | média | Corrigido: `node tests/e2e/run.mjs`; README, runbook e entrega atualizados; `engines.node >= 20.6` |
+| A6 medições contra servidor antigo na 3100 | média | Corrigido: servidor da 3100 reiniciado com o código atual antes da varredura/Lighthouse finais |
+| A7 inconsistências docs×código | média | Corrigido: `lastmod` só com data de conteúdo; rebuild+commit após `data.js`; backlog e entrega alinhados; frases corrigidas |
+| A8 promessas de SLA/preço | média | Corrigido: "em breve" na mensagem de sucesso; "diagnóstico inicial"; "conversa inicial"; "com clareza desde o início" |
+| A9 exceção de assets pendentes nos E2E | média | Corrigido: `PENDING_ASSETS = []` |
+| A10 bandas de CTA com `wa.me` sem `target`/evento | baixa | Corrigido em `ctaBand()` (externo → `target/rel`, `btn--wa`, `whatsapp_click`) |
+| A11 "27 estados e DF" | baixa | Corrigido: "27 unidades da federação" |
+| A12 CSS/código morto | baixa | Não feito (não afeta publicação); registrado como melhoria futura |
+| A13 docs/comentários desatualizados | baixa | Corrigido (README, `site.js`, visual-review, engines) |
+| A14 CSP com origens supérfluas | baixa | `i.ytimg.com` removido; Google Fonts mantido como fallback declarado no `<head>` quando os woff2 faltam |
+| A15 `TRUST_PROXY` automático | baixa | Documentado no runbook (`0` quando exposto diretamente) |
+| A16 data da política atrelada ao build | baixa | Corrigido com A1 |
+| A17 `.wa-float` sobre texto em páginas longas no mobile | baixa | Não alterado; registrado como melhoria (ocultar o flutuante ao rolar para baixo) |
+| A18 capturas > 16.384 px repetem o topo | info | Registrado em `visual-review.md` (artefato do Chrome; DOM verificado) |
+| A19 sem injeção de entrada do usuário em HTML | info | Confirmado |

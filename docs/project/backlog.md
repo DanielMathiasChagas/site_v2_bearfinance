@@ -44,14 +44,14 @@ Legenda: **P0** bloqueia publicação · **P1** necessário para o nível premiu
 | F5-01 | P0 | E2E Playwright: rotas, links, menus, formulários, WhatsApp, 7 larguras, console limpo, teclado, reduced-motion (93 casos; suíte do agente, execução/correções pelo orquestrador) | qa-tester + orquestrador | F3-* | ☑ |
 | F5-02 | P0 | Lighthouse mobile/desktop + axe; relatório (100/100/100/100 nas 5 páginas) | seo-performance + orquestrador | F3-* | ☑ |
 | F5-03 | P0 | Correções de regressão | orquestrador | F5-01/02 | ☑ |
-| F5-04 | P0 | Revisão independente (`docs/qa/technical-review.md`) | technical-reviewer | F5-03 | ◐ |
+| F5-04 | P0 | Revisão independente (`docs/qa/technical-review.md`) | technical-reviewer | F5-03 | ☑ |
 
 ## Fase 6 — Entrega
 | ID | P | Item | Responsável | Depende de | Status |
 |---|---|---|---|---|---|
 | F6-01 | P0 | `docs/deployment/production-readiness.md` (deploy, rollback, env) | orquestrador | F5-04 | ☑ |
 | F6-02 | P0 | `docs/project/final-delivery.md` (tabela de evidências) | orquestrador | F5-04 | ☑ |
-| F6-03 | P0 | Commit final na branch `redesign/v2` (sem publicar) | orquestrador | F6-02 | ◐ |
+| F6-03 | P0 | Commit final na branch `redesign/v2` (sem publicar) | orquestrador | F6-02 | ☑ |
 
 ## Schema de dados combinado (contrato entre marketing e build)
 
@@ -82,3 +82,4 @@ career.jobs pode ser [] (build mostra "banco de talentos")
 - Varredura visual/técnica (`scripts/shots.mjs`): 119 combinações sem overflow, 1 h1 por página, console limpo.
 - Testes do servidor: 26/26. E2E: 93/93 após 3 correções. Lighthouse final: 100/100/100/100 nas 5 páginas (mobile e desktop).
 - Agente qa-tester caiu (429) antes do relatório; agente seo-performance concluiu; agente technical-reviewer relançado às 19:32 para o parecer independente.
+- Parecer independente (`docs/qa/technical-review-independente.md`): 3 achados altos + 6 médios corrigidos pelo orquestrador; reverificação completa antes do commit final.

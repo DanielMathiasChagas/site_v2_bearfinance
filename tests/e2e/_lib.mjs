@@ -24,7 +24,7 @@ export const KEY_PAGES = {
 };
 export const WA = { comercial: "5511983148774", parcerias: "5511915267749" };
 // Caminhos cujo 404 é apenas registrado (ilustrações ainda em geração, conforme briefing do orquestrador).
-export const PENDING_ASSETS = [/\/assets\/img\/art\//];
+export const PENDING_ASSETS = []; // ilustrações entregues: qualquer 404 reprova
 export const isPending = (url) => PENDING_ASSETS.some((re) => re.test(url));
 
 export const sleep = (ms) => new Promise((r) => setTimeout(r, ms));

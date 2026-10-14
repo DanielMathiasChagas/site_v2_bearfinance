@@ -6,7 +6,7 @@ Capturas reais (Chrome via Playwright, DPR 1). "Antes" = v1 (clone estrutural, p
 `node scripts/shots.mjs <pasta>`: 17 rotas × 7 larguras (320, 375, 390, 768, 1024, 1440, 1920). Para cada uma: status HTTP, contagem de `h1`, tamanho do `<title>`, largura de rolagem vs. viewport (overflow horizontal) com lista de elementos culpados, erros de console/página/requisição. Screenshots de página inteira em 1440 e 390 após rolagem programática (para disparar as revelações), mais capturas do mapa neural com o ponteiro sobre uma capital, do hero e do menu mobile aberto.
 
 ## Resultado da última varredura (14/10/2026)
-- 119 combinações rota × largura: **0 overflow horizontal, 1 `h1` em todas, 0 erros de console** (exceto o 404 esperado na rota inexistente e o aviso de Swiper quando a CDN está bloqueada no ambiente de teste, caso em que o carrossel vira rolagem horizontal nativa).
+- 119 combinações rota × largura: **0 overflow horizontal, 1 `h1` em todas, 0 erros de console** (exceto o 404 esperado na rota inexistente). O carrossel de segmentos é nativo (scroll-snap), sem CDN.
 - Mapa neural: `.br-neural.is-live` = true, canvas 658×658 em 1440 px, rótulo muda ao pairar sobre uma capital (ex.: "Goiânia · GO · atendimento digital").
 
 ## Comparativo por página
@@ -36,6 +36,9 @@ Capturas reais (Chrome via Playwright, DPR 1). "Antes" = v1 (clone estrutural, p
 | V5 | Mapa neural caía no fallback | `const rgba` usado antes da inicialização (ordem no IIFE) | `init()` movido para o fim do módulo |
 | V6 | Mesma arte do urso repetida em vários pôsteres | pôster padrão único | Mapa de pôsteres por página |
 | V7 | Foto azul do urso destoava da paleta | ativo original azul | Filtro de matiz (`.media--brand`) |
+
+## Observação sobre capturas longas
+Páginas mobile com mais de 16.384 px de altura (home em 390 px: ~18.100 px) excedem o limite de textura do Chrome; a captura de página inteira repete o topo no rodapé. É artefato de captura: o DOM tem um único hero/h1 e as seções na ordem esperada (verificado pelo revisor independente). Para evidência do fim dessas páginas, capturar por segmentos (`clip`).
 
 ## Pendências visuais (dependem do cliente)
 - Fotos reais de sócios e equipe (hoje avatares com etiqueta "Substituir").

@@ -21,7 +21,7 @@
 | E2E 10 Imagens (alt, carregamento) | 2 | 2 ✔ |
 | E2E 11 prefers-reduced-motion | 11 | 11 ✔ |
 | E2E 12 Acessibilidade (axe-core) — critical/serious em 5 páginas × 2 larguras | 2 | 2 ✔ |
-| **Total E2E** | **93** | **93 ✔ / 0 ✖** (264 s) |
+| **Total E2E** | **93** | **93 ✔ / 0 ✖** (257 s, execução final após as correções do parecer independente) |
 
 Saída real (`docs/qa/e2e-run.log`):
 ```
@@ -29,7 +29,7 @@ Saída real (`docs/qa/e2e-run.log`):
 ℹ suites 12
 ℹ pass 93
 ℹ fail 0
-ℹ duration_ms 264759.304709
+ℹ duration_ms 256742.791917
 ```
 Servidor:
 ```
@@ -46,7 +46,7 @@ Complementos: varredura `scripts/shots.mjs` (17 rotas × 7 larguras: 0 overflow,
 | QA-02 | home @390 | Ao abrir o drawer o foco ficava no botão hambúrguer (elemento ainda `visibility:hidden` durante a transição) | média | `e2e-run1` 03-menu | CSS: `visibility` imediata ao abrir (`transition: visibility 0s`), atraso só ao fechar; JS foca após dois `requestAnimationFrame` (orquestrador) |
 | QA-03 | /conteudo/<post>/ @1440 | `.aside__box--dark h3` com contraste 1,06:1 (título rebaixado de h4→h3 pela correção de ordem de títulos perdeu a cor branca) | alta (axe serious) | `e2e-run1` 12-axe | CSS: `.aside__box--dark h3, .aside__box--dark h4 { color: #fff }` (orquestrador) |
 
-Regressão após as correções: 93/93 (`e2e-run2` = `docs/qa/e2e-run.log`).
+Regressão após as correções: 93/93; nova execução completa após as correções do parecer independente (exceção `PENDING_ASSETS` removida, bandas de CTA com `target`): 93/93 (`docs/qa/e2e-run.log`).
 
 ## 3. Cobertura dos 15 itens obrigatórios
 

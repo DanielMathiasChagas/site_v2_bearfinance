@@ -63,7 +63,7 @@ export const CSP = [
   "script-src 'self'",
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src 'self' https://fonts.gstatic.com data:",
-  "img-src 'self' data: https://i.ytimg.com",
+  "img-src 'self' data:",
   "frame-src https://www.youtube-nocookie.com",
   "connect-src 'self'",
   "object-src 'none'",
@@ -105,7 +105,7 @@ const textarea = (label) => ({ label, type: "textarea", max: 2000 });
 
 export const FORMS = {
   contato: {
-    ok: "Mensagem recebida! Um especialista entrará em contato em até 1 dia útil.",
+    ok: "Solicitação recebida! Um especialista entrará em contato em breve.",
     fields: {
       nome: name("Nome", "Informe seu nome."),
       empresa: name("Empresa", "Informe o nome da empresa."),

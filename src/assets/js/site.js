@@ -1,4 +1,4 @@
-/* Bear Finance — comportamentos do site (sem dependências; Swiper carregado sob demanda) */
+/* Bear Finance — comportamentos do site (sem dependências externas) */
 (() => {
   "use strict";
   document.documentElement.classList.add("js");
