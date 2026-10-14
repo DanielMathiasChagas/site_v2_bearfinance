@@ -27,7 +27,7 @@ if (!(await healthy())) {
 } else console.log(`[e2e] usando servidor já ativo em ${BASE}`);
 
 const only = args.indexOf("--only");
-const files = only >= 0 ? [join("tests", "e2e", args[only + 1])] : ["tests/e2e/"];
+const files = only >= 0 ? [join("tests", "e2e", args[only + 1])] : ["tests/e2e/*.test.mjs"]; // glob expandido pelo próprio node --test (diretório não funciona no Node 24)
 const code = await run(["--test", `--test-concurrency=${process.env.E2E_CONCURRENCY || 3}`, "--test-reporter=spec", "--test-reporter-destination=stdout", ...files], { E2E_REQUIRE: "1" });
 if (child) child.kill("SIGTERM");
 process.exit(code);

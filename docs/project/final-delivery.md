@@ -23,7 +23,7 @@ O site deixou de ser um clone estrutural com placeholders e métricas fictícias
 | Responsividade | Texto cortado em 390 px | Grid sem `140vw`, `min-width:0`, botões quebram linha < 480 px; drawer corrigido | Varredura 17 rotas × 7 larguras: 0 overflow | Aprovado | — |
 | SEO técnico | OG 500², sem BreadcrumbList/Article/Service, sitemap sem lastmod | Títulos ≤ 60 (exceto 6 posts longos, decisão editorial), descrições 140–160, OG 1200×630 (JPEG) com alt, Twitter card, favicon SVG + apple-touch-icon, JSON-LD Organization/AccountingService (telefone E.164, `sameAs` só após confirmação), BreadcrumbList, FAQPage, Service, Article com imagem; sitemap com lastmod por página | Lighthouse SEO **100** nas 5 páginas | Aprovado | Encurtar títulos dos posts se desejado |
 | Performance | FA + webfont de terceiro, Swiper via CDN (404), WebGL em todas as páginas, sem lazy/size em imagens, FCP mobile 2,5 s | Sem FA nem Swiper (carrossel nativo), fonte self-hosted com preload, WebGL só na home, mapa Canvas só em desktop, imagens com dimensões/lazy, assets versionados com cache imutável, gzip/brotli | Lighthouse Performance **100** mobile e desktop nas 5 páginas; LCP 1,4–1,8 s mobile; CLS 0 (`docs/qa/lighthouse/final/`) | Aprovado | — |
-| QA E2E | Nenhum teste | Suíte Playwright (Chrome do sistema) em `tests/e2e/` + relatório | `docs/qa/test-report.md` | Ver relatório de QA | Corrigir falhas apontadas |
+| QA E2E | Nenhum teste | Suíte Playwright (Chrome do sistema) em `tests/e2e/` (12 arquivos, 93 casos) + relatório; 3 falhas da 1ª execução corrigidas | `docs/qa/test-report.md`, `docs/qa/e2e-run.log` → **93/93**; 49 capturas em `docs/qa/screenshots/depois/` | Aprovado | Passe manual em Safari/Firefox (não disponíveis no ambiente) |
 | Revisão independente | — | Parecer de prontidão | `docs/qa/technical-review.md` | Ver parecer | — |
 | Implantação | Sem documentação | Runbook com env, systemd/nginx, rollback, checklist | `docs/deployment/production-readiness.md` | Aprovado (documentado) | Autorização para publicar |
 
@@ -52,7 +52,7 @@ Design system e componentes; header com dropdowns acessíveis e drawer mobile; h
 
 - Servidor: `node --test tests/server.test.js` → **26/26** (API, limites, estáticos/segurança, SMTP com servidor falso).
 - Varredura visual/técnica: `node scripts/shots.mjs` → 119 combinações rota × largura sem overflow, 1 h1, console limpo.
-- E2E Playwright: ver `docs/qa/test-report.md`.
+- E2E Playwright: `node tests/e2e/run.mjs` → **93/93** (12 suítes, 264 s), após corrigir 3 falhas da primeira execução (âncoras `#diagnostico`, foco do drawer, contraste de um título). Detalhes em `docs/qa/test-report.md`.
 
 ## 8. Indicadores de performance
 

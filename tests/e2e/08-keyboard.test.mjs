@@ -29,11 +29,12 @@ describe("08 Teclado e foco visível", { skip: SKIP }, () => {
     const { ctx, page } = await openPage(browser, { width: 1440 });
     await goto(page, "/");
     await dismissCookie(page);
-    await page.mouse.click(8, 520); // garante que o foco não esteja no aviso de cookies
-    await page.evaluate(() => { document.activeElement && document.activeElement.blur(); scrollTo(0, 0); });
+    await page.reload({ waitUntil: "load" }); // documento novo: a navegação por Tab começa do início (aviso já dispensado)
+    await page.waitForTimeout(300);
     const seq = [], noIndicator = [], offscreen = [];
     for (let i = 0; i < 60; i++) {
       await page.keyboard.press("Tab");
+      await page.waitForTimeout(i === 0 ? 350 : 60); // transições (o skip link desliza para dentro da tela)
       const f = await page.evaluate(FOCUS_INFO);
       if (!f) break;
       seq.push(f);

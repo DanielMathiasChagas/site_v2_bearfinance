@@ -36,7 +36,8 @@ describe("02 Links internos/externos e assets", { skip: SKIP }, () => {
         } else if (st.status !== 200) broken.push(`${from} → ${a.href} (${st.status})`);
         if (c.hash) {
           const target = c.path === from ? html : (pages.get(c.path) ?? (await fetchHtml(c.path)).html);
-          if (!hasId(target, c.hash)) missingAnchors.push(`${from} → ${a.href}`);
+          const filterLink = target.includes(`data-filter="${c.hash}"`); // deep link do filtro de conteúdo (tratado por JS em /conteudo/)
+          if (!hasId(target, c.hash) && !filterLink) missingAnchors.push(`${from} → ${a.href}`);
         }
       }
     }

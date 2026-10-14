@@ -69,6 +69,7 @@ export function resetIssues(issues) { for (const k of Object.keys(issues)) issue
 export async function openPage(browser, { width = 1440, height, reducedMotion = "no-preference", bypassCSP = false } = {}) {
   const ctx = await browser.newContext({ viewport: { width, height: height || HEIGHTS[width] || 900 }, reducedMotion, locale: "pt-BR", deviceScaleFactor: 1, bypassCSP });
   const page = await ctx.newPage();
+  page.setDefaultTimeout(15_000); // ações travadas viram erro explícito em vez de esperar 30 s
   const issues = watch(page);
   return { ctx, page, issues };
 }
@@ -87,14 +88,19 @@ export async function dismissCookie(page) {
   } catch { /* banner ausente */ }
 }
 
-/** Rola a página até o fim em passos (dispara reveals e carregamentos sob demanda) e volta ao topo. */
+/** Rola a página até o fim em passos curtos (dispara reveals por IntersectionObserver e carregamentos sob demanda) e volta ao topo.
+ *  Passos de 40% da viewport com 150 ms garantem que todo .reveal receba .in (passos largos/rápidos deixavam seções com opacity 0). */
 export async function scrollThrough(page) {
   await page.evaluate(async () => {
-    const step = Math.max(300, Math.floor(innerHeight * 0.8));
-    for (let y = 0; y <= document.documentElement.scrollHeight; y += step) { scrollTo(0, y); await new Promise((r) => setTimeout(r, 60)); }
+    const step = Math.max(200, Math.floor(innerHeight * 0.4));
+    for (let y = 0; y <= document.documentElement.scrollHeight; y += step) { scrollTo(0, y); await new Promise((r) => setTimeout(r, 150)); }
     scrollTo(0, 0);
-    await new Promise((r) => setTimeout(r, 200));
+    await new Promise((r) => setTimeout(r, 250));
   });
+}
+/** Reveals pendentes fora de contêineres ocultos (deve ser 0 após scrollThrough). */
+export async function pendingReveals(page) {
+  return page.evaluate(() => [...document.querySelectorAll(".reveal:not(.in), .reveal-group:not(.in)")].filter((el) => !el.closest("[hidden]") && el.getBoundingClientRect().height > 0).map((el) => `${el.tagName.toLowerCase()}.${String(el.className).split(/\s+/)[0]}`));
 }
 
 export async function overflowInfo(page) {
@@ -102,10 +108,12 @@ export async function overflowInfo(page) {
     const de = document.documentElement, iw = innerWidth, culprits = [];
     const name = (el) => el.tagName.toLowerCase() + (el.id ? `#${el.id}` : "") + (typeof el.className === "string" && el.className.trim() ? "." + el.className.trim().split(/\s+/).slice(0, 2).join(".") : "");
     if (de.scrollWidth > iw || document.body.scrollWidth > iw) {
+      const fixedSeen = new Set();
+      const inFixed = (el) => { for (let e = el; e && e !== document.body; e = e.parentElement) { if (fixedSeen.has(e)) return true; if (getComputedStyle(e).position === "fixed") { fixedSeen.add(e); return true; } } return false; };
       for (const el of document.querySelectorAll("body *")) {
         const r = el.getBoundingClientRect(); if (!r.width && !r.height) continue;
-        if (getComputedStyle(el).position === "fixed") continue;
-        if (r.right > iw + 1 || r.left < -1) { culprits.push(`${name(el)} [${Math.round(r.left)}..${Math.round(r.right)}]`); if (culprits.length >= 10) break; }
+        if (inFixed(el) || el.classList.contains("hp")) continue; // drawer/botões fixos e honeypot (left:-9999px) não geram rolagem
+        if (r.right > iw + 1) { culprits.push(`${name(el)} [${Math.round(r.left)}..${Math.round(r.right)}]`); if (culprits.length >= 10) break; }
       }
     }
     return { scrollWidth: de.scrollWidth, bodyScrollWidth: document.body.scrollWidth, innerWidth: iw, culprits };

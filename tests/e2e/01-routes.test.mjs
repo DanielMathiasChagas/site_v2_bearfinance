@@ -1,16 +1,21 @@
 // Cobertura 1 — rotas do sitemap + 404: status, <title>, meta description, um único <h1>.
 import { test, describe } from "node:test";
 import assert from "node:assert/strict";
-import { BASE, gate, sitemapRoutes, fetchHtml, title, meta, h1s } from "./_lib.mjs";
+import { readdir } from "node:fs/promises";
+import { BASE, PUBLIC, gate, sitemapRoutes, fetchHtml, title, meta, h1s } from "./_lib.mjs";
 
 const SKIP = await gate();
 
 describe("01 Rotas (sitemap + 404)", { skip: SKIP }, () => {
-  test("sitemap.xml lista 34 rotas únicas, canônicas e com barra final", async () => {
+  test("sitemap.xml lista todas as páginas geradas em public/ (e só elas), únicas, canônicas e com barra final", async () => {
     const routes = await sitemapRoutes();
-    assert.equal(routes.length, 34, `rotas no sitemap: ${routes.length}`);
+    const files = await readdir(PUBLIC, { recursive: true });
+    const built = files.filter((f) => f === "index.html" || f.endsWith("/index.html")).map((f) => "/" + f.replace(/index\.html$/, "")).sort();
+    console.log(`[rotas] ${routes.length} rotas no sitemap + /404.html (${built.length} páginas geradas)`);
+    assert.deepEqual([...routes].sort(), built, "sitemap e páginas geradas divergem");
     assert.deepEqual(routes.filter((r) => !r.endsWith("/")), [], "rotas sem barra final");
     assert.equal(new Set(routes).size, routes.length, "rotas duplicadas");
+    assert.ok(routes.length >= 30, `poucas rotas: ${routes.length}`);
   });
 
   test("cada rota do sitemap responde 200 (HTML) com <title>, meta description e exatamente um <h1>", async () => {

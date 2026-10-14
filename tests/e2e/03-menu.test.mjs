@@ -61,6 +61,18 @@ describe("03 Menu desktop e mobile", { skip: SKIP }, () => {
     }
   });
 
+  test("mobile 390: ao abrir o drawer o foco vai para o primeiro item do menu", { timeout: 60_000 }, async () => {
+    const { ctx, page } = await openPage(browser, { width: 390 });
+    await goto(page, "/");
+    await dismissCookie(page);
+    await page.locator(".burger").click();
+    await page.locator("#site-navigation").waitFor({ state: "visible", timeout: 3000 });
+    await page.waitForTimeout(600); // transição do drawer
+    const inDrawer = await page.evaluate(() => !!document.activeElement.closest("#site-navigation"));
+    assert.equal(inDrawer, true, `foco deveria estar no drawer; está em ${await active(page)}`);
+    await ctx.close();
+  });
+
   test("mobile 390: botão abre o drawer, submenus expandem (um por vez), foco preso, Esc fecha e devolve o foco", { timeout: 60_000 }, async () => {
     const { ctx, page, issues } = await openPage(browser, { width: 390 });
     await goto(page, "/");
@@ -74,7 +86,6 @@ describe("03 Menu desktop e mobile", { skip: SKIP }, () => {
     await page.locator("#site-navigation").waitFor({ state: "visible", timeout: 3000 });
     assert.equal(await burger.getAttribute("aria-expanded"), "true");
     assert.equal(await page.evaluate(() => document.body.classList.contains("nav-open")), true);
-    assert.equal(await page.evaluate(() => !!document.activeElement.closest("#site-navigation")), true, "foco deve ir para o drawer ao abrir");
     const info = await overflowInfo(page);
     assert.ok(info.scrollWidth <= info.innerWidth, `overflow horizontal com o drawer aberto: ${info.scrollWidth} > ${info.innerWidth}`);
 

@@ -26,7 +26,11 @@
   const closeSubs = (except) => $$(".nav__item.is-open").forEach((li) => { if (li !== except) { li.classList.remove("is-open"); const b = $("button[aria-expanded]", li); if (b) b.setAttribute("aria-expanded", "false"); } });
   const setNav = (open) => { body.classList.toggle("nav-open", open); if (burger) burger.setAttribute("aria-expanded", String(open)); if (!open) closeSubs(); };
   if (burger && nav) {
-    burger.addEventListener("click", () => { const open = !body.classList.contains("nav-open"); setNav(open); if (open) { const f = $("a, button", nav); if (f) f.focus({ preventScroll: true }); } });
+    burger.addEventListener("click", () => {
+      const open = !body.classList.contains("nav-open");
+      setNav(open);
+      if (open) requestAnimationFrame(() => requestAnimationFrame(() => { const f = $("a, button", nav); if (f) f.focus({ preventScroll: true }); }));
+    });
     nav.addEventListener("keydown", (e) => {
       if (e.key !== "Tab" || !body.classList.contains("nav-open")) return;
       const f = $$("a, button", nav).filter((el) => el.offsetParent !== null);

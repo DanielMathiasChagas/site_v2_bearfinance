@@ -1,7 +1,7 @@
 // Cobertura 6 — responsividade: 5 páginas × 7 larguras, screenshot de página inteira e sem overflow horizontal.
 import { test, describe, before, after } from "node:test";
 import assert from "node:assert/strict";
-import { WIDTHS, KEY_PAGES, gate, launch, openPage, goto, shot, scrollThrough, overflowInfo, dismissCookie } from "./_lib.mjs";
+import { WIDTHS, KEY_PAGES, gate, launch, openPage, goto, shot, scrollThrough, overflowInfo, dismissCookie, pendingReveals } from "./_lib.mjs";
 
 const SKIP = await gate();
 const MAX_H = 6000; // altura máxima da captura (páginas longas)
@@ -20,11 +20,13 @@ describe("06 Responsividade (320–1920)", { skip: SKIP }, () => {
         await scrollThrough(page);
         await page.waitForTimeout(900); // transições de reveal
         const info = await overflowInfo(page);
+        const pending = await pendingReveals(page);
         const h = Math.min(await page.evaluate(() => document.documentElement.scrollHeight), MAX_H);
         await shot(page, `${key}-${w}.png`, { fullPage: true, clip: { x: 0, y: 0, width: w, height: h } });
         await ctx.close();
         assert.ok(info.scrollWidth <= info.innerWidth && info.bodyScrollWidth <= info.innerWidth,
           `overflow horizontal: scrollWidth=${info.scrollWidth} body=${info.bodyScrollWidth} innerWidth=${info.innerWidth}; elementos: ${info.culprits.join(" | ") || "—"}`);
+        assert.deepEqual(pending, [], "conteúdo .reveal que não apareceu após rolar a página inteira (ficaria invisível na captura/para o usuário)");
         assert.deepEqual(issues.pageErrors, [], "erros de página durante a captura");
       });
     }

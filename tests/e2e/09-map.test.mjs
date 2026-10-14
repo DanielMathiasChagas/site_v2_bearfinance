@@ -1,8 +1,9 @@
-// Cobertura 9 — mapa neural (Canvas 2D) e ondas do hero (WebGL): canvas vivo no desktop, quadro estático com reduced-motion e < 768px,
-// fallback SVG sem o script, sem erro não tratado.
+// Cobertura 9 — mapa neural (Canvas 2D carregado sob demanda) e ondas do hero (WebGL).
+// Contrato atual (site.js): os scripts do mapa só carregam em desktop com ponteiro fino, >= 768px e sem reduced-motion;
+// nos demais casos permanece a imagem estática de fallback. Sem BR_GEO ou erro: fallback mantido, sem erro não tratado.
 import { test, describe, before, after } from "node:test";
 import assert from "node:assert/strict";
-import { gate, launch, openPage, goto, shotEl, dismissCookie } from "./_lib.mjs";
+import { gate, launch, openPage, goto, shotEl, dismissCookie, scrollThrough } from "./_lib.mjs";
 
 const SKIP = await gate();
 const MAP = ".br-neural[data-brmap]";
@@ -15,20 +16,27 @@ const frame = (page) => page.evaluate(() => {
   for (let i = 0; i < data.length; i += 4 * 7) { if (data[i + 3] > 8) painted++; hash = (hash * 31 + data[i] + data[i + 1] * 3 + data[i + 2] * 7 + data[i + 3] * 11) >>> 0; }
   return { w: c.width, h: c.height, painted, hash };
 });
-const fallbackState = (page) => page.evaluate(() => { const el = document.querySelector(".br-neural__fallback"); const cs = getComputedStyle(el); return { visibility: cs.visibility, opacity: Number(cs.opacity), hasSvg: !!el.querySelector("svg.br-map") }; });
+const fallbackState = (page) => page.evaluate(() => {
+  const el = document.querySelector(".br-neural__fallback"); const cs = getComputedStyle(el);
+  const img = el.querySelector("img"), svg = el.querySelector("svg");
+  return { visibility: cs.visibility, opacity: Number(cs.opacity), kind: img ? "img" : svg ? "svg" : "none", loaded: img ? img.complete && img.naturalWidth > 0 : !!svg, alt: img ? img.getAttribute("alt") : null };
+});
+const trackMapScripts = (page) => { const urls = []; page.on("request", (r) => { if (/brmap\.js|brazil-geo\.js/.test(r.url())) urls.push(r.url()); }); return urls; };
 
 describe("09 Mapa neural e WebGL", { skip: SKIP }, () => {
   let browser;
   before(async () => { browser = await launch(); });
   after(async () => { await browser?.close(); });
 
-  test("desktop 1440: canvas presente, .is-live, desenhado e animado; fallback SVG oculto", { timeout: 60_000 }, async () => {
+  test("desktop 1440: scripts carregam sob demanda, canvas .is-live desenhado e animado; fallback oculto", { timeout: 60_000 }, async () => {
     const { ctx, page, issues } = await openPage(browser, { width: 1440 });
+    const scripts = trackMapScripts(page);
     await goto(page, "/");
     await dismissCookie(page);
     assert.equal(await page.locator(`${MAP} canvas`).count(), 1, "canvas do mapa deve existir");
     await page.locator(MAP).scrollIntoViewIfNeeded();
-    await page.waitForSelector(`${MAP}.is-live`, { timeout: 5000 });
+    await page.waitForSelector(`${MAP}.is-live`, { timeout: 10_000 });
+    assert.ok(scripts.some((u) => /brazil-geo\.js/.test(u)) && scripts.some((u) => /brmap\.js/.test(u)), `scripts do mapa deveriam ter sido carregados (${scripts.join(", ")})`);
     await page.mouse.move(700, 450);
     await page.waitForTimeout(800);
     const a = await frame(page);
@@ -38,71 +46,62 @@ describe("09 Mapa neural e WebGL", { skip: SKIP }, () => {
     const b = await frame(page);
     assert.notEqual(a.hash, b.hash, "no desktop o mapa deve animar (quadros diferentes)");
     const fb = await fallbackState(page);
-    assert.equal(fb.visibility, "hidden", "fallback SVG deve ficar oculto quando o canvas está vivo");
+    assert.equal(fb.visibility, "hidden", "fallback deve ficar oculto quando o canvas está vivo");
     await shotEl(page.locator(MAP), "home-mapa-1440.png");
     assert.deepEqual(issues.pageErrors, []);
     assert.deepEqual(issues.consoleErrors, []);
     await ctx.close();
   });
 
-  test("prefers-reduced-motion: quadro estático (.is-live, desenhado, sem animação) e layout íntegro", { timeout: 60_000 }, async () => {
-    const { ctx, page, issues } = await openPage(browser, { width: 1440, reducedMotion: "reduce" });
-    await goto(page, "/");
-    await dismissCookie(page);
-    await page.locator(MAP).scrollIntoViewIfNeeded();
-    await page.waitForSelector(`${MAP}.is-live`, { timeout: 5000 });
-    await page.mouse.move(700, 450);
-    await page.waitForTimeout(500);
-    const a = await frame(page);
-    assert.ok(a.painted > 50, "quadro estático deve estar desenhado");
-    await page.waitForTimeout(700);
-    const b = await frame(page);
-    assert.equal(a.hash, b.hash, "com reduced-motion o mapa não deve animar");
-    await shotEl(page.locator(MAP), "home-mapa-reduced-1440.png");
-    assert.deepEqual(issues.pageErrors, []);
-    await ctx.close();
-  });
+  for (const [label, opts] of [["prefers-reduced-motion @1440", { width: 1440, reducedMotion: "reduce" }], ["viewport 390 (< 768)", { width: 390 }]]) {
+    test(`${label}: fallback estático (imagem carregada, com alt), sem carregar scripts do mapa, sem erros`, { timeout: 60_000 }, async () => {
+      const { ctx, page, issues } = await openPage(browser, opts);
+      const scripts = trackMapScripts(page);
+      await goto(page, "/");
+      await dismissCookie(page);
+      await page.locator(MAP).scrollIntoViewIfNeeded();
+      await scrollThrough(page);
+      await page.locator(MAP).scrollIntoViewIfNeeded();
+      await page.waitForTimeout(1500);
+      assert.deepEqual(scripts, [], "scripts do mapa não devem ser baixados neste modo");
+      assert.equal(await page.locator(`${MAP}.is-live`).count(), 0);
+      const fb = await fallbackState(page);
+      assert.equal(fb.visibility, "visible");
+      assert.equal(fb.opacity, 1);
+      assert.notEqual(fb.kind, "none", "fallback deve conter imagem ou svg");
+      assert.equal(fb.loaded, true, "imagem de fallback deve estar carregada");
+      if (fb.kind === "img") assert.ok((fb.alt || "").length > 10, "imagem de fallback precisa de alt descritivo");
+      await shotEl(page.locator(MAP), opts.reducedMotion ? "home-mapa-reduced-1440.png" : "home-mapa-390.png");
+      assert.deepEqual(issues.pageErrors, []);
+      assert.deepEqual(issues.consoleErrors, []);
+      await ctx.close();
+    });
+  }
 
-  test("viewport 390 (< 768): quadro estático desenhado, sem animação", { timeout: 60_000 }, async () => {
-    const { ctx, page, issues } = await openPage(browser, { width: 390 });
-    await goto(page, "/");
-    await dismissCookie(page);
-    await page.locator(MAP).scrollIntoViewIfNeeded();
-    await page.waitForSelector(`${MAP}.is-live`, { timeout: 5000 });
-    await page.waitForTimeout(500);
-    const a = await frame(page);
-    assert.ok(a.painted > 50, "quadro estático deve estar desenhado no mobile");
-    await page.waitForTimeout(700);
-    const b = await frame(page);
-    assert.equal(a.hash, b.hash, "abaixo de 768px o mapa não deve animar");
-    await shotEl(page.locator(MAP), "home-mapa-390.png");
-    assert.deepEqual(issues.pageErrors, []);
-    await ctx.close();
-  });
-
-  test("sem o script do mapa: fallback SVG permanece visível e não há erro de página", { timeout: 60_000 }, async () => {
+  test("sem o script do mapa (bloqueado): fallback permanece visível e não há erro de página", { timeout: 60_000 }, async () => {
     const { ctx, page, issues } = await openPage(browser, { width: 1440 });
     await page.route("**/assets/js/brmap.js*", (r) => r.abort());
     await goto(page, "/");
-    await page.waitForTimeout(800);
+    await page.locator(MAP).scrollIntoViewIfNeeded();
+    await page.waitForTimeout(1500);
     assert.equal(await page.locator(`${MAP}.is-live`).count(), 0);
     const fb = await fallbackState(page);
-    assert.equal(fb.hasSvg, true, "svg.br-map de fallback deve existir");
     assert.equal(fb.visibility, "visible");
-    assert.equal(fb.opacity, 1);
-    assert.equal(await page.locator(`${MAP} svg.br-map`).isVisible(), true);
+    assert.notEqual(fb.kind, "none");
+    assert.equal(fb.loaded, true);
     assert.deepEqual(issues.pageErrors, []);
     await ctx.close();
   });
 
-  test("sem BR_GEO (dados do mapa): script avisa no console e mantém o SVG, sem erro", { timeout: 60_000 }, async () => {
+  test("sem BR_GEO (malha vazia): script avisa [brmap] no console, mantém o fallback, sem erro", { timeout: 60_000 }, async () => {
     const { ctx, page, issues } = await openPage(browser, { width: 1440 });
     await page.route("**/assets/js/brazil-geo.js*", (r) => r.fulfill({ status: 200, contentType: "text/javascript", body: "/* sem dados */" }));
     await goto(page, "/");
-    await page.waitForTimeout(800);
+    await page.locator(MAP).scrollIntoViewIfNeeded();
+    await page.waitForTimeout(2000);
     assert.equal(await page.locator(`${MAP}.is-live`).count(), 0);
-    assert.equal(await page.locator(`${MAP} svg.br-map`).isVisible(), true);
-    assert.ok(issues.warnings.some((w) => /brmap/.test(w)), "deve avisar [brmap] no console");
+    assert.equal((await fallbackState(page)).visibility, "visible");
+    assert.ok(issues.warnings.some((w) => /\[brmap\]/.test(w)), `deveria avisar [brmap] no console (avisos: ${issues.warnings.join(" | ") || "nenhum"})`);
     assert.deepEqual(issues.pageErrors, []);
     assert.deepEqual(issues.consoleErrors, []);
     await ctx.close();

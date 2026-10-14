@@ -70,7 +70,7 @@ describe("05 Formulários (servidor real)", { skip: SKIP }, () => {
     await fillDiagnostico(page, mail);
     await setTs(page, F, 10_000);
     const res = await submit(page, F, "/api/contato");
-    assert.equal(res.status(), 201, `esperado 201, veio ${res.status()}: ${await res.text()}`);
+    assert.equal(res.status(), 201, `esperado 201, veio ${res.status()}: ${res.status() === 201 ? "" : await res.text().catch(() => "")}`);
     await page.locator(`${F} .form__done`).waitFor({ state: "visible", timeout: 5000 });
     assert.match(await page.textContent(`${F} .form__done h3`), /Recebemos/);
     const wa = page.locator(`${F} .form__done a.btn--wa`);
@@ -156,7 +156,7 @@ describe("05 Formulários (servidor real)", { skip: SKIP }, () => {
     await page.fill(`${N} [name=email]`, mail);
     await setTs(page, N, 10_000);
     const res = await submit(page, N, "/api/newsletter");
-    assert.equal(res.status(), 201, await res.text());
+    assert.equal(res.status(), 201, res.status() === 201 ? "" : await res.text().catch(() => ""));
     await page.locator(`${N} .form__msg.is-ok`).waitFor({ state: "visible", timeout: 5000 });
     assert.ok((await page.textContent(`${N} .form__msg`)).trim().length > 10);
     assert.equal(await page.inputValue(`${N} [name=email]`), "", "formulário deve ser limpo após o sucesso");
@@ -181,7 +181,7 @@ describe("05 Formulários (servidor real)", { skip: SKIP }, () => {
     await page.fill(`${C} [name=curriculo]`, "https://www.linkedin.com/in/qa-teste-bear");
     await setTs(page, C, 10_000);
     const res = await submit(page, C, "/api/carreira");
-    assert.equal(res.status(), 201, await res.text());
+    assert.equal(res.status(), 201, res.status() === 201 ? "" : await res.text().catch(() => ""));
     await page.locator(`${C} .form__msg.is-ok`).waitFor({ state: "visible", timeout: 5000 });
     await ctx.close();
   });
@@ -226,6 +226,7 @@ describe("05 Formulários (servidor real)", { skip: SKIP }, () => {
       await page.waitForTimeout(400);
       assert.equal(popups.length, 0, "sem consentimento LGPD não pode abrir o WhatsApp");
       await page.check(`${P} input[name=lgpd]`);
+      await setTs(page, P, 10_000); // anti-bot: o servidor descarta envios feitos < 3 s após o carregamento
       const popupP = ctx.waitForEvent("page", { timeout: 8000 });
       const respP = page.waitForResponse((r) => r.url().includes("/api/parceria") && r.request().method() === "POST", { timeout: 15_000 });
       await page.click(`${P} [type=submit]`);
@@ -241,8 +242,8 @@ describe("05 Formulários (servidor real)", { skip: SKIP }, () => {
       assert.match(text, /\*Seu nome completo:\* QA Parceiro Teste/);
       assert.match(text, /\*WhatsApp:\* \(11\) 98888-7777/);
       assert.doesNotMatch(text, /lgpd|website/i, "mensagem não deve expor campos técnicos");
-      const resp = await respP;
-      assert.equal(resp.status(), 201, `lead de parceria: ${resp.status()} ${await resp.text()}`);
+      const resp = await respP; // fetch keepalive: o corpo não é legível via Playwright — só o status
+      assert.equal(resp.status(), 201, `lead de parceria deveria responder 201 (veio ${resp.status()})`);
       await page.locator(`${P} .pform-done`).waitFor({ state: "visible", timeout: 3000 });
       assert.equal(await page.getAttribute(`${P} [data-wa-open]`, "href"), url, "botão 'abrir novamente' deve reutilizar a mesma URL");
       await shot(page, `parceria-wa-${width}.png`);

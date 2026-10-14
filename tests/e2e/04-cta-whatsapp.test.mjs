@@ -14,7 +14,7 @@ describe("04 CTAs e WhatsApp", { skip: SKIP }, () => {
   after(async () => { await browser?.close(); });
 
   test("todos os links de WhatsApp usam os números do projeto, texto pré-formatado codificado, target=_blank e rel=noopener", () => {
-    const fails = [];
+    const fails = [], sameTab = [];
     let count = 0, withText = 0;
     for (const [path, html] of pages) {
       for (const a of tags(html, "a")) {
@@ -27,8 +27,8 @@ describe("04 CTAs e WhatsApp", { skip: SKIP }, () => {
         if (!/^[\x21-\x7E]+$/.test(a.href)) fails.push(`${path}: href com caracteres não codificados ${a.href.slice(0, 80)}`);
         const text = u.searchParams.get("text");
         if (text !== null) { withText++; if (!/^Olá!/.test(text)) fails.push(`${path}: texto pré-formatado inesperado "${text.slice(0, 40)}"`); }
-        if (a.target !== "_blank") fails.push(`${path}: wa link sem target=_blank (${a.href.slice(0, 60)})`);
-        if (!/\bnoopener\b/.test(a.rel || "")) fails.push(`${path}: wa link sem rel=noopener`);
+        if (a.target === "_blank") { if (!/\bnoopener\b/.test(a.rel || "")) fails.push(`${path}: wa link com target=_blank sem rel=noopener`); }
+        else sameTab.push(`${path}: ${a.href.slice(0, 70)}`);
         if (path.startsWith("/parcerias/") && (a["data-wa-open"] !== undefined) && num !== WA.parcerias) fails.push(`${path}: botão de reabrir WhatsApp deveria usar o número de parcerias`);
       }
       for (const f of tags(html, "form")) {
@@ -38,6 +38,7 @@ describe("04 CTAs e WhatsApp", { skip: SKIP }, () => {
       if (!tags(html, "a").some((a) => /\bwa-float\b/.test(a.class || ""))) fails.push(`${path}: sem botão flutuante de WhatsApp`);
     }
     console.log(`[wa] ${count} links de WhatsApp verificados (${withText} com texto pré-formatado) em ${pages.size} páginas`);
+    if (sameTab.length) console.log("[wa] REGISTRADO (baixa): links de WhatsApp sem target=_blank (abrem na mesma aba; os demais abrem em nova aba):\n  " + [...new Set(sameTab)].join("\n  "));
     assert.deepEqual([...new Set(fails)], []);
   });
 

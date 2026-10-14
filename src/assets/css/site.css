@@ -204,8 +204,8 @@ body.is-scrolled .hdr { background: rgba(7, 5, 13, .84); -webkit-backdrop-filter
   .burger, .hdr__wa { display: inline-flex; }
   /* sem backdrop-filter no mobile: ele viraria o bloco de contenção do drawer fixo */
   .hdr, body.is-scrolled .hdr { background: rgba(7, 5, 13, .96); -webkit-backdrop-filter: none; backdrop-filter: none; }
-  .nav { position: fixed; inset: 0; z-index: 55; background: var(--bg-0); padding: calc(var(--hdr) + 12px) 20px 40px; overflow-y: auto; transform: translateX(100%); opacity: 0; visibility: hidden; transition: transform .4s var(--ease), opacity .3s, visibility .4s; }
-  body.nav-open .nav { transform: none; opacity: 1; visibility: visible; }
+  .nav { position: fixed; inset: 0; z-index: 55; background: var(--bg-0); padding: calc(var(--hdr) + 12px) 20px 40px; overflow-y: auto; transform: translateX(100%); opacity: 0; visibility: hidden; transition: transform .4s var(--ease), opacity .3s, visibility 0s .4s; }
+  body.nav-open .nav { transform: none; opacity: 1; visibility: visible; transition: transform .4s var(--ease), opacity .3s, visibility 0s; }
   body.nav-open { overflow: hidden; }
   .nav__list { display: block; }
   .nav__item { border-bottom: 1px solid var(--line-dark); }
@@ -462,7 +462,7 @@ body.hide-ph .ph::after { display: none; }
 .aside__box li a { color: var(--ink-700); }
 .aside__box li a:hover { color: var(--violet-600); }
 .aside__box--dark { background: var(--bg-2); border-color: var(--bg-2); color: var(--ink-300); }
-.aside__box--dark h4 { color: #fff; }
+.aside__box--dark h3, .aside__box--dark h4 { color: #fff; }
 .share { display: flex; gap: 8px; margin-top: var(--s-4); }
 .share button { width: 42px; height: 42px; border-radius: 10px; border: 1px solid var(--line-dark); background: rgba(255, 255, 255, .06); color: #fff; display: grid; place-items: center; cursor: pointer; transition: all .2s; }
 .share button:hover { background: var(--violet-400); color: var(--ink-900); border-color: var(--violet-400); }

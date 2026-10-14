@@ -156,6 +156,12 @@ function footer(waHref) {
 <div class="cookie is-light" hidden role="region" aria-label="Aviso de cookies"><p><strong>Cookies.</strong> Usamos cookies essenciais para o site funcionar e, se você permitir, de desempenho para melhorá-lo. Veja a <a href="/privacidade/#cookies">Política de Cookies</a>.</p><div class="cookie__btns"><button class="btn btn--sm btn--dark" type="button" data-cookie="accept">Aceitar</button><button class="btn btn--sm btn--outline" type="button" data-cookie="reject">Só essenciais</button></div></div></div>`;
 }
 
+// Corpo dentro de <main>: remove o <main> interno das páginas e, quando a página não tem a seção de
+// diagnóstico, redireciona as âncoras #diagnostico para /contato/#diagnostico (evita âncora sem destino).
+const mainBody = (body) => {
+  const inner = body.replace('<main id="main" class="site-main">', "").replace("</main>", "");
+  return /\sid="diagnostico"/.test(inner) ? inner : inner.replace(/href="#diagnostico"/g, 'href="/contato/#diagnostico"');
+};
 function page({ key = "", title, description, active = "", bodyClass = "", body, path = "/", jsonld = [], crumbs = null, waHref = wa(WA_DEFAULT), ogType = "website", extraHead = "", extraScripts = "", noindex = false }) {
   const url = S.url + path;
   const ogFile = has("img/og-image.jpg") ? "og-image.jpg" : has("img/og-image.png") ? "og-image.png" : "";
@@ -217,7 +223,7 @@ ${ld.map((o) => `<script type="application/ld+json">${JSON.stringify(o)}</script
 <span id="top"></span>
 ${header(active)}
 <main id="main" class="site-main">
-${body.replace('<main id="main" class="site-main">', "").replace("</main>", "")}
+${mainBody(body)}
 </main>
 ${footer(waHref)}
 <script src="/assets/js/site.js?v=${VER.js}" defer></script>
