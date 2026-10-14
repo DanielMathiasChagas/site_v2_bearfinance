@@ -1,0 +1,882 @@
+[
+  {
+    "page": "/",
+    "mode": "mobile",
+    "violations": [
+      {
+        "id": "region",
+        "impact": "moderate",
+        "help": "All page content should be contained by landmarks",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": ".hero__in",
+            "html": "<div class=\"inner hero__in\">",
+            "msg": "Some page content is not contained by landmarks"
+          },
+          {
+            "target": ".curve__btn",
+            "html": "<a class=\"curve__btn\" href=\"#proposta\" aria-label=\"Rolar para o conteúdo\"><svg class=\"i\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7",
+            "msg": "Some page content is not contained by landmarks"
+          },
+          {
+            "target": ".wa-float",
+            "html": "<a class=\"wa-float\" href=\"https://wa.me/5511983148774?text=Ol%C3%A1!%20Quero%20solicitar%20um%20diagn%C3%B3stico%20da%20Bear%20Finance%20para%20a%20minha%20empr",
+            "msg": "Some page content is not contained by landmarks"
+          }
+        ],
+        "count": 3
+      }
+    ],
+    "incomplete": [
+      {
+        "id": "color-contrast",
+        "count": 69
+      },
+      {
+        "id": "link-in-text-block",
+        "count": 1
+      }
+    ],
+    "passes": 48
+  },
+  {
+    "page": "/atuacao/contabilidade/",
+    "mode": "mobile",
+    "violations": [
+      {
+        "id": "landmark-no-duplicate-banner",
+        "impact": "moderate",
+        "help": "Document should not have more than one banner landmark",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": "#masthead",
+            "html": "<header class=\"hdr\" id=\"masthead\">",
+            "msg": "Document has more than one banner landmark"
+          }
+        ],
+        "count": 1
+      },
+      {
+        "id": "landmark-unique",
+        "impact": "moderate",
+        "help": "Landmarks should have a unique role or role/label/title (i.e. accessible name) combination",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": "#masthead",
+            "html": "<header class=\"hdr\" id=\"masthead\">",
+            "msg": "The landmark must have a unique aria-label, aria-labelledby, or title to make landmarks distinguishable"
+          }
+        ],
+        "count": 1
+      },
+      {
+        "id": "region",
+        "impact": "moderate",
+        "help": "All page content should be contained by landmarks",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": ".curve__btn",
+            "html": "<a class=\"curve__btn\" href=\"#conteudo\" aria-label=\"Rolar para o conteúdo\"><svg class=\"i\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7",
+            "msg": "Some page content is not contained by landmarks"
+          },
+          {
+            "target": ".wa-float",
+            "html": "<a class=\"wa-float\" href=\"https://wa.me/5511983148774?text=Ol%C3%A1!%20Quero%20saber%20mais%20sobre%20a%20Contabilidade%20consultiva%20da%20Bear%20Finance%20par",
+            "msg": "Some page content is not contained by landmarks"
+          }
+        ],
+        "count": 2
+      }
+    ],
+    "incomplete": [
+      {
+        "id": "color-contrast",
+        "count": 63
+      },
+      {
+        "id": "link-in-text-block",
+        "count": 1
+      }
+    ],
+    "passes": 46
+  },
+  {
+    "page": "/verticais/contabilidade-agronegocio/",
+    "mode": "mobile",
+    "violations": [
+      {
+        "id": "landmark-no-duplicate-banner",
+        "impact": "moderate",
+        "help": "Document should not have more than one banner landmark",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": "#masthead",
+            "html": "<header class=\"hdr\" id=\"masthead\">",
+            "msg": "Document has more than one banner landmark"
+          }
+        ],
+        "count": 1
+      },
+      {
+        "id": "landmark-unique",
+        "impact": "moderate",
+        "help": "Landmarks should have a unique role or role/label/title (i.e. accessible name) combination",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": "#masthead",
+            "html": "<header class=\"hdr\" id=\"masthead\">",
+            "msg": "The landmark must have a unique aria-label, aria-labelledby, or title to make landmarks distinguishable"
+          }
+        ],
+        "count": 1
+      },
+      {
+        "id": "region",
+        "impact": "moderate",
+        "help": "All page content should be contained by landmarks",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": ".wa-float",
+            "html": "<a class=\"wa-float\" href=\"https://wa.me/5511983148774?text=Ol%C3%A1!%20Atuo%20no%20agroneg%C3%B3cio%20e%20quero%20saber%20mais%20sobre%20a%20contabilidade%20da%",
+            "msg": "Some page content is not contained by landmarks"
+          }
+        ],
+        "count": 1
+      }
+    ],
+    "incomplete": [
+      {
+        "id": "color-contrast",
+        "count": 64
+      },
+      {
+        "id": "link-in-text-block",
+        "count": 1
+      }
+    ],
+    "passes": 50
+  },
+  {
+    "page": "/contato/",
+    "mode": "mobile",
+    "violations": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "tags": [
+          "wcag2aa",
+          "wcag143"
+        ],
+        "nodes": [
+          {
+            "target": ".fcard > p",
+            "html": "<p>Preencha os dados. Um especialista do seu setor analisa o cenário e retorna com os próximos passos.</p>",
+            "msg": "Element has insufficient color contrast of 2.89 (foreground color: #9a94b3, background color: #ffffff, font size: 11.3pt (15px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": "a[href$=\"privacidade/\"][target=\"_blank\"][rel=\"noopener\"]",
+            "html": "<a href=\"/privacidade/\" target=\"_blank\" rel=\"noopener\">Política de Privacidade</a>",
+            "msg": "Element has insufficient color contrast of 1.84 (foreground color: #c4b5fd, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": "#form-diagnostico > .form__grid > .form__actions > .form__note",
+            "html": "<p class=\"form__note\">",
+            "msg": "Element has insufficient color contrast of 2.89 (foreground color: #9a94b3, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+          }
+        ],
+        "count": 3
+      },
+      {
+        "id": "heading-order",
+        "impact": "moderate",
+        "help": "Heading levels should only increase by one",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": ".fcard > h3",
+            "html": "<h3>Solicite um diagnóstico</h3>",
+            "msg": "Heading order invalid"
+          }
+        ],
+        "count": 1
+      },
+      {
+        "id": "landmark-no-duplicate-banner",
+        "impact": "moderate",
+        "help": "Document should not have more than one banner landmark",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": "#masthead",
+            "html": "<header class=\"hdr\" id=\"masthead\">",
+            "msg": "Document has more than one banner landmark"
+          }
+        ],
+        "count": 1
+      },
+      {
+        "id": "landmark-unique",
+        "impact": "moderate",
+        "help": "Landmarks should have a unique role or role/label/title (i.e. accessible name) combination",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": "#masthead",
+            "html": "<header class=\"hdr\" id=\"masthead\">",
+            "msg": "The landmark must have a unique aria-label, aria-labelledby, or title to make landmarks distinguishable"
+          }
+        ],
+        "count": 1
+      },
+      {
+        "id": "region",
+        "impact": "moderate",
+        "help": "All page content should be contained by landmarks",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": ".wa-float",
+            "html": "<a class=\"wa-float\" href=\"https://wa.me/5511983148774?text=Ol%C3%A1!%20Quero%20solicitar%20um%20diagn%C3%B3stico%20da%20Bear%20Finance%20para%20a%20minha%20empr",
+            "msg": "Some page content is not contained by landmarks"
+          }
+        ],
+        "count": 1
+      }
+    ],
+    "incomplete": [
+      {
+        "id": "color-contrast",
+        "count": 66
+      },
+      {
+        "id": "link-in-text-block",
+        "count": 1
+      }
+    ],
+    "passes": 46
+  },
+  {
+    "page": "/parcerias/business-partner/",
+    "mode": "mobile",
+    "violations": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "tags": [
+          "wcag2aa",
+          "wcag143"
+        ],
+        "nodes": [
+          {
+            "target": "label[for=\"pf-bp-nome\"]",
+            "html": "<label for=\"pf-bp-nome\">Seu nome completo</label>",
+            "msg": "Element has insufficient color contrast of 3.46 (foreground color: #8c86a3, background color: #ffffff, font size: 11.3pt (15px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": "label[for=\"pf-bp-telefone\"]",
+            "html": "<label for=\"pf-bp-telefone\">WhatsApp</label>",
+            "msg": "Element has insufficient color contrast of 3.46 (foreground color: #8c86a3, background color: #ffffff, font size: 11.3pt (15px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": "label[for=\"pf-bp-email\"]",
+            "html": "<label for=\"pf-bp-email\">E-mail</label>",
+            "msg": "Element has insufficient color contrast of 3.46 (foreground color: #8c86a3, background color: #ffffff, font size: 11.3pt (15px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": "label[for=\"pf-bp-cidade\"]",
+            "html": "<label for=\"pf-bp-cidade\">Cidade / UF</label>",
+            "msg": "Element has insufficient color contrast of 3.46 (foreground color: #8c86a3, background color: #ffffff, font size: 11.3pt (15px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": ".pform-foot > a[target=\"_blank\"][rel=\"noopener\"]",
+            "html": "<a href=\"https://wa.me/5511915267749?text=Ol%C3%A1!%20Quero%20saber%20mais%20sobre%20o%20programa%20Business%20Partner%20da%20Bear%20Finance.\" target=\"_blank\" r",
+            "msg": "Element has insufficient color contrast of 4.3 (foreground color: #128c4b, background color: #ffffff, font size: 10.5pt (14px), font weight: bold). Expected contrast ratio of 4.5:1"
+          }
+        ],
+        "count": 5
+      },
+      {
+        "id": "heading-order",
+        "impact": "moderate",
+        "help": "Heading levels should only increase by one",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": ".pform-head > h3",
+            "html": "<h3>Quero ser <strong>Business Partner</strong></h3>",
+            "msg": "Heading order invalid"
+          },
+          {
+            "target": ".who-box > h4",
+            "html": "<h4>Para quem é</h4>",
+            "msg": "Heading order invalid"
+          }
+        ],
+        "count": 2
+      },
+      {
+        "id": "landmark-no-duplicate-banner",
+        "impact": "moderate",
+        "help": "Document should not have more than one banner landmark",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": "#masthead",
+            "html": "<header class=\"hdr\" id=\"masthead\">",
+            "msg": "Document has more than one banner landmark"
+          }
+        ],
+        "count": 1
+      },
+      {
+        "id": "landmark-unique",
+        "impact": "moderate",
+        "help": "Landmarks should have a unique role or role/label/title (i.e. accessible name) combination",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": "#masthead",
+            "html": "<header class=\"hdr\" id=\"masthead\">",
+            "msg": "The landmark must have a unique aria-label, aria-labelledby, or title to make landmarks distinguishable"
+          }
+        ],
+        "count": 1
+      },
+      {
+        "id": "region",
+        "impact": "moderate",
+        "help": "All page content should be contained by landmarks",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": ".wa-float",
+            "html": "<a class=\"wa-float\" href=\"https://wa.me/5511915267749?text=Ol%C3%A1!%20Quero%20saber%20mais%20sobre%20o%20programa%20Business%20Partner%20da%20Bear%20Finance.\" ",
+            "msg": "Some page content is not contained by landmarks"
+          }
+        ],
+        "count": 1
+      }
+    ],
+    "incomplete": [
+      {
+        "id": "color-contrast",
+        "count": 73
+      },
+      {
+        "id": "link-in-text-block",
+        "count": 1
+      }
+    ],
+    "passes": 46
+  },
+  {
+    "page": "/",
+    "mode": "desktop",
+    "violations": [
+      {
+        "id": "region",
+        "impact": "moderate",
+        "help": "All page content should be contained by landmarks",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": ".hero__in",
+            "html": "<div class=\"inner hero__in\">",
+            "msg": "Some page content is not contained by landmarks"
+          },
+          {
+            "target": ".curve__btn",
+            "html": "<a class=\"curve__btn\" href=\"#proposta\" aria-label=\"Rolar para o conteúdo\"><svg class=\"i\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7",
+            "msg": "Some page content is not contained by landmarks"
+          },
+          {
+            "target": ".wa-float",
+            "html": "<a class=\"wa-float\" href=\"https://wa.me/5511983148774?text=Ol%C3%A1!%20Quero%20solicitar%20um%20diagn%C3%B3stico%20da%20Bear%20Finance%20para%20a%20minha%20empr",
+            "msg": "Some page content is not contained by landmarks"
+          }
+        ],
+        "count": 3
+      }
+    ],
+    "incomplete": [
+      {
+        "id": "color-contrast",
+        "count": 87
+      },
+      {
+        "id": "link-in-text-block",
+        "count": 1
+      }
+    ],
+    "passes": 48
+  },
+  {
+    "page": "/atuacao/contabilidade/",
+    "mode": "desktop",
+    "violations": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "tags": [
+          "wcag2aa",
+          "wcag143"
+        ],
+        "nodes": [
+          {
+            "target": "li:nth-child(12)",
+            "html": "<li style=\"--i:11\"><svg class=\"i\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-",
+            "msg": "Element has insufficient color contrast of 1.01 (foreground color: #f5f3fa, background color: #f7f5fc, font size: 11.3pt (15px), font weight: bold). Expected contrast ratio of 4.5:1"
+          }
+        ],
+        "count": 1
+      },
+      {
+        "id": "landmark-no-duplicate-banner",
+        "impact": "moderate",
+        "help": "Document should not have more than one banner landmark",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": "#masthead",
+            "html": "<header class=\"hdr\" id=\"masthead\">",
+            "msg": "Document has more than one banner landmark"
+          }
+        ],
+        "count": 1
+      },
+      {
+        "id": "landmark-unique",
+        "impact": "moderate",
+        "help": "Landmarks should have a unique role or role/label/title (i.e. accessible name) combination",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": "#masthead",
+            "html": "<header class=\"hdr\" id=\"masthead\">",
+            "msg": "The landmark must have a unique aria-label, aria-labelledby, or title to make landmarks distinguishable"
+          }
+        ],
+        "count": 1
+      },
+      {
+        "id": "link-in-text-block",
+        "impact": "serious",
+        "help": "Links must be distinguishable without relying on color",
+        "tags": [
+          "wcag2a",
+          "wcag141"
+        ],
+        "nodes": [
+          {
+            "target": "p > a[href$=\"privacidade/#cookies\"]",
+            "html": "<a href=\"/privacidade/#cookies\">Política de Cookies</a>",
+            "msg": "The link has insufficient color contrast of 1.44:1 with the surrounding text. (Minimum contrast is 3:1, link text: #7c3aed, surrounding text: #514a6b)"
+          }
+        ],
+        "count": 1
+      },
+      {
+        "id": "region",
+        "impact": "moderate",
+        "help": "All page content should be contained by landmarks",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": ".curve__btn",
+            "html": "<a class=\"curve__btn\" href=\"#conteudo\" aria-label=\"Rolar para o conteúdo\"><svg class=\"i\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7",
+            "msg": "Some page content is not contained by landmarks"
+          },
+          {
+            "target": ".wa-float",
+            "html": "<a class=\"wa-float\" href=\"https://wa.me/5511983148774?text=Ol%C3%A1!%20Quero%20saber%20mais%20sobre%20a%20Contabilidade%20consultiva%20da%20Bear%20Finance%20par",
+            "msg": "Some page content is not contained by landmarks"
+          }
+        ],
+        "count": 2
+      }
+    ],
+    "incomplete": [
+      {
+        "id": "color-contrast",
+        "count": 70
+      }
+    ],
+    "passes": 47
+  },
+  {
+    "page": "/verticais/contabilidade-agronegocio/",
+    "mode": "desktop",
+    "violations": [
+      {
+        "id": "landmark-no-duplicate-banner",
+        "impact": "moderate",
+        "help": "Document should not have more than one banner landmark",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": "#masthead",
+            "html": "<header class=\"hdr\" id=\"masthead\">",
+            "msg": "Document has more than one banner landmark"
+          }
+        ],
+        "count": 1
+      },
+      {
+        "id": "landmark-unique",
+        "impact": "moderate",
+        "help": "Landmarks should have a unique role or role/label/title (i.e. accessible name) combination",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": "#masthead",
+            "html": "<header class=\"hdr\" id=\"masthead\">",
+            "msg": "The landmark must have a unique aria-label, aria-labelledby, or title to make landmarks distinguishable"
+          }
+        ],
+        "count": 1
+      },
+      {
+        "id": "region",
+        "impact": "moderate",
+        "help": "All page content should be contained by landmarks",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": ".wa-float",
+            "html": "<a class=\"wa-float\" href=\"https://wa.me/5511983148774?text=Ol%C3%A1!%20Atuo%20no%20agroneg%C3%B3cio%20e%20quero%20saber%20mais%20sobre%20a%20contabilidade%20da%",
+            "msg": "Some page content is not contained by landmarks"
+          }
+        ],
+        "count": 1
+      }
+    ],
+    "incomplete": [
+      {
+        "id": "color-contrast",
+        "count": 69
+      },
+      {
+        "id": "link-in-text-block",
+        "count": 1
+      }
+    ],
+    "passes": 50
+  },
+  {
+    "page": "/contato/",
+    "mode": "desktop",
+    "violations": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "tags": [
+          "wcag2aa",
+          "wcag143"
+        ],
+        "nodes": [
+          {
+            "target": ".fcard > p",
+            "html": "<p>Preencha os dados. Um especialista do seu setor analisa o cenário e retorna com os próximos passos.</p>",
+            "msg": "Element has insufficient color contrast of 2.89 (foreground color: #9a94b3, background color: #ffffff, font size: 11.3pt (15px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": "a[href$=\"privacidade/\"][target=\"_blank\"][rel=\"noopener\"]",
+            "html": "<a href=\"/privacidade/\" target=\"_blank\" rel=\"noopener\">Política de Privacidade</a>",
+            "msg": "Element has insufficient color contrast of 1.84 (foreground color: #c4b5fd, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": "#form-diagnostico > .form__grid > .form__actions > .form__note",
+            "html": "<p class=\"form__note\">",
+            "msg": "Element has insufficient color contrast of 2.89 (foreground color: #9a94b3, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": "li:nth-child(1) > div > strong",
+            "html": "<strong>Diagnóstico</strong>",
+            "msg": "Element has insufficient color contrast of 1.06 (foreground color: #0b0716, background color: #150f24, font size: 12.8pt (17px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": "li:nth-child(2) > div > strong",
+            "html": "<strong>Proposta sob medida</strong>",
+            "msg": "Element has insufficient color contrast of 1.06 (foreground color: #0b0716, background color: #150f24, font size: 12.8pt (17px), font weight: bold). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": "li:nth-child(3) > div > strong",
+            "html": "<strong>Onboarding e integrações</strong>",
+            "msg": "Element has insufficient color contrast of 1.06 (foreground color: #0b0716, background color: #150f24, font size: 12.8pt (17px), font weight: bold). Expected contrast ratio of 4.5:1"
+          }
+        ],
+        "count": 6
+      },
+      {
+        "id": "heading-order",
+        "impact": "moderate",
+        "help": "Heading levels should only increase by one",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": ".fcard > h3",
+            "html": "<h3>Solicite um diagnóstico</h3>",
+            "msg": "Heading order invalid"
+          }
+        ],
+        "count": 1
+      },
+      {
+        "id": "landmark-no-duplicate-banner",
+        "impact": "moderate",
+        "help": "Document should not have more than one banner landmark",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": "#masthead",
+            "html": "<header class=\"hdr\" id=\"masthead\">",
+            "msg": "Document has more than one banner landmark"
+          }
+        ],
+        "count": 1
+      },
+      {
+        "id": "landmark-unique",
+        "impact": "moderate",
+        "help": "Landmarks should have a unique role or role/label/title (i.e. accessible name) combination",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": "#masthead",
+            "html": "<header class=\"hdr\" id=\"masthead\">",
+            "msg": "The landmark must have a unique aria-label, aria-labelledby, or title to make landmarks distinguishable"
+          }
+        ],
+        "count": 1
+      },
+      {
+        "id": "link-in-text-block",
+        "impact": "serious",
+        "help": "Links must be distinguishable without relying on color",
+        "tags": [
+          "wcag2a",
+          "wcag141"
+        ],
+        "nodes": [
+          {
+            "target": "li:nth-child(1) > div > a[data-track=\"whatsapp_click\"][target=\"_blank\"][rel=\"noopener\"]",
+            "html": "<a href=\"https://wa.me/5511983148774?text=Ol%C3%A1!%20Quero%20solicitar%20um%20diagn%C3%B3stico%20da%20Bear%20Finance%20para%20a%20minha%20empresa.\" target=\"_bl",
+            "msg": "The link has insufficient color contrast of 1.22:1 with the surrounding text. (Minimum contrast is 3:1, link text: #ffffff, surrounding text: #e9e6f3)"
+          }
+        ],
+        "count": 1
+      },
+      {
+        "id": "region",
+        "impact": "moderate",
+        "help": "All page content should be contained by landmarks",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": ".wa-float",
+            "html": "<a class=\"wa-float\" href=\"https://wa.me/5511983148774?text=Ol%C3%A1!%20Quero%20solicitar%20um%20diagn%C3%B3stico%20da%20Bear%20Finance%20para%20a%20minha%20empr",
+            "msg": "Some page content is not contained by landmarks"
+          }
+        ],
+        "count": 1
+      }
+    ],
+    "incomplete": [
+      {
+        "id": "color-contrast",
+        "count": 71
+      },
+      {
+        "id": "link-in-text-block",
+        "count": 1
+      }
+    ],
+    "passes": 47
+  },
+  {
+    "page": "/parcerias/business-partner/",
+    "mode": "desktop",
+    "violations": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "tags": [
+          "wcag2aa",
+          "wcag143"
+        ],
+        "nodes": [
+          {
+            "target": "label[for=\"pf-bp-nome\"]",
+            "html": "<label for=\"pf-bp-nome\">Seu nome completo</label>",
+            "msg": "Element has insufficient color contrast of 3.46 (foreground color: #8c86a3, background color: #ffffff, font size: 11.3pt (15px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": "label[for=\"pf-bp-telefone\"]",
+            "html": "<label for=\"pf-bp-telefone\">WhatsApp</label>",
+            "msg": "Element has insufficient color contrast of 3.46 (foreground color: #8c86a3, background color: #ffffff, font size: 11.3pt (15px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": "label[for=\"pf-bp-email\"]",
+            "html": "<label for=\"pf-bp-email\">E-mail</label>",
+            "msg": "Element has insufficient color contrast of 3.46 (foreground color: #8c86a3, background color: #ffffff, font size: 11.3pt (15px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": "label[for=\"pf-bp-cidade\"]",
+            "html": "<label for=\"pf-bp-cidade\">Cidade / UF</label>",
+            "msg": "Element has insufficient color contrast of 3.46 (foreground color: #8c86a3, background color: #ffffff, font size: 11.3pt (15px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": ".pform-foot > a[target=\"_blank\"][rel=\"noopener\"]",
+            "html": "<a href=\"https://wa.me/5511915267749?text=Ol%C3%A1!%20Quero%20saber%20mais%20sobre%20o%20programa%20Business%20Partner%20da%20Bear%20Finance.\" target=\"_blank\" r",
+            "msg": "Element has insufficient color contrast of 4.3 (foreground color: #128c4b, background color: #ffffff, font size: 10.5pt (14px), font weight: bold). Expected contrast ratio of 4.5:1"
+          }
+        ],
+        "count": 5
+      },
+      {
+        "id": "heading-order",
+        "impact": "moderate",
+        "help": "Heading levels should only increase by one",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": ".pform-head > h3",
+            "html": "<h3>Quero ser <strong>Business Partner</strong></h3>",
+            "msg": "Heading order invalid"
+          },
+          {
+            "target": ".who-box > h4",
+            "html": "<h4>Para quem é</h4>",
+            "msg": "Heading order invalid"
+          }
+        ],
+        "count": 2
+      },
+      {
+        "id": "landmark-no-duplicate-banner",
+        "impact": "moderate",
+        "help": "Document should not have more than one banner landmark",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": "#masthead",
+            "html": "<header class=\"hdr\" id=\"masthead\">",
+            "msg": "Document has more than one banner landmark"
+          }
+        ],
+        "count": 1
+      },
+      {
+        "id": "landmark-unique",
+        "impact": "moderate",
+        "help": "Landmarks should have a unique role or role/label/title (i.e. accessible name) combination",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": "#masthead",
+            "html": "<header class=\"hdr\" id=\"masthead\">",
+            "msg": "The landmark must have a unique aria-label, aria-labelledby, or title to make landmarks distinguishable"
+          }
+        ],
+        "count": 1
+      },
+      {
+        "id": "region",
+        "impact": "moderate",
+        "help": "All page content should be contained by landmarks",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": ".wa-float",
+            "html": "<a class=\"wa-float\" href=\"https://wa.me/5511915267749?text=Ol%C3%A1!%20Quero%20saber%20mais%20sobre%20o%20programa%20Business%20Partner%20da%20Bear%20Finance.\" ",
+            "msg": "Some page content is not contained by landmarks"
+          }
+        ],
+        "count": 1
+      }
+    ],
+    "incomplete": [
+      {
+        "id": "color-contrast",
+        "count": 78
+      },
+      {
+        "id": "link-in-text-block",
+        "count": 1
+      }
+    ],
+    "passes": 46
+  }
+]

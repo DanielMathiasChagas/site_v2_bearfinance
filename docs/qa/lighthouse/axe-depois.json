@@ -1,0 +1,744 @@
+[
+  {
+    "page": "/",
+    "mode": "mobile",
+    "violations": [
+      {
+        "id": "region",
+        "impact": "moderate",
+        "help": "All page content should be contained by landmarks",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": ".hero__in",
+            "html": "<div class=\"inner hero__in\">",
+            "msg": "Some page content is not contained by landmarks"
+          },
+          {
+            "target": ".curve__btn",
+            "html": "<a class=\"curve__btn\" href=\"#proposta\" aria-label=\"Rolar para o conteúdo\"><svg class=\"i\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7",
+            "msg": "Some page content is not contained by landmarks"
+          },
+          {
+            "target": ".wa-float",
+            "html": "<a class=\"wa-float\" href=\"https://wa.me/5511983148774?text=Ol%C3%A1!%20Quero%20solicitar%20um%20diagn%C3%B3stico%20da%20Bear%20Finance%20para%20a%20minha%20empr",
+            "msg": "Some page content is not contained by landmarks"
+          }
+        ],
+        "count": 3
+      },
+      {
+        "id": "target-size",
+        "impact": "serious",
+        "help": "All touch targets must be 24px large, or leave sufficient space",
+        "tags": [
+          "wcag22aa",
+          "wcag258"
+        ],
+        "nodes": [
+          {
+            "target": "button[aria-label=\"Ir para o segmento 1 de 8\"]",
+            "html": "<button type=\"button\" aria-label=\"Ir para o segmento 1 de 8\" aria-current=\"true\"></button>",
+            "msg": "Target has insufficient size (26px by 8px, should be at least 24px by 24px)"
+          },
+          {
+            "target": "button[aria-label=\"Ir para o segmento 2 de 8\"]",
+            "html": "<button type=\"button\" aria-label=\"Ir para o segmento 2 de 8\" aria-current=\"false\"></button>",
+            "msg": "Target has insufficient size (8px by 8px, should be at least 24px by 24px)"
+          },
+          {
+            "target": "button[aria-label=\"Ir para o segmento 3 de 8\"]",
+            "html": "<button type=\"button\" aria-label=\"Ir para o segmento 3 de 8\" aria-current=\"false\"></button>",
+            "msg": "Target has insufficient size (8px by 8px, should be at least 24px by 24px)"
+          },
+          {
+            "target": "button[aria-label=\"Ir para o segmento 4 de 8\"]",
+            "html": "<button type=\"button\" aria-label=\"Ir para o segmento 4 de 8\" aria-current=\"false\"></button>",
+            "msg": "Target has insufficient size (8px by 8px, should be at least 24px by 24px)"
+          },
+          {
+            "target": "button[aria-label=\"Ir para o segmento 5 de 8\"]",
+            "html": "<button type=\"button\" aria-label=\"Ir para o segmento 5 de 8\" aria-current=\"false\"></button>",
+            "msg": "Target has insufficient size (8px by 8px, should be at least 24px by 24px)"
+          },
+          {
+            "target": "button[aria-label=\"Ir para o segmento 6 de 8\"]",
+            "html": "<button type=\"button\" aria-label=\"Ir para o segmento 6 de 8\" aria-current=\"false\"></button>",
+            "msg": "Target has insufficient size (8px by 8px, should be at least 24px by 24px)"
+          }
+        ],
+        "count": 8
+      }
+    ],
+    "incomplete": [
+      {
+        "id": "aria-prohibited-attr",
+        "count": 2
+      },
+      {
+        "id": "color-contrast",
+        "count": 166
+      }
+    ],
+    "passes": 50
+  },
+  {
+    "page": "/atuacao/contabilidade/",
+    "mode": "mobile",
+    "violations": [
+      {
+        "id": "landmark-no-duplicate-banner",
+        "impact": "moderate",
+        "help": "Document should not have more than one banner landmark",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": "#masthead",
+            "html": "<header class=\"hdr\" id=\"masthead\">",
+            "msg": "Document has more than one banner landmark"
+          }
+        ],
+        "count": 1
+      },
+      {
+        "id": "landmark-unique",
+        "impact": "moderate",
+        "help": "Landmarks should have a unique role or role/label/title (i.e. accessible name) combination",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": "#masthead",
+            "html": "<header class=\"hdr\" id=\"masthead\">",
+            "msg": "The landmark must have a unique aria-label, aria-labelledby, or title to make landmarks distinguishable"
+          }
+        ],
+        "count": 1
+      },
+      {
+        "id": "region",
+        "impact": "moderate",
+        "help": "All page content should be contained by landmarks",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": ".curve__btn",
+            "html": "<a class=\"curve__btn\" href=\"#conteudo\" aria-label=\"Rolar para o conteúdo\"><svg class=\"i\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7",
+            "msg": "Some page content is not contained by landmarks"
+          },
+          {
+            "target": ".wa-float",
+            "html": "<a class=\"wa-float\" href=\"https://wa.me/5511983148774?text=Ol%C3%A1!%20Quero%20saber%20mais%20sobre%20a%20Contabilidade%20consultiva%20da%20Bear%20Finance%20par",
+            "msg": "Some page content is not contained by landmarks"
+          }
+        ],
+        "count": 2
+      }
+    ],
+    "incomplete": [
+      {
+        "id": "color-contrast",
+        "count": 96
+      }
+    ],
+    "passes": 47
+  },
+  {
+    "page": "/verticais/contabilidade-agronegocio/",
+    "mode": "mobile",
+    "violations": [
+      {
+        "id": "landmark-no-duplicate-banner",
+        "impact": "moderate",
+        "help": "Document should not have more than one banner landmark",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": "#masthead",
+            "html": "<header class=\"hdr\" id=\"masthead\">",
+            "msg": "Document has more than one banner landmark"
+          }
+        ],
+        "count": 1
+      },
+      {
+        "id": "landmark-unique",
+        "impact": "moderate",
+        "help": "Landmarks should have a unique role or role/label/title (i.e. accessible name) combination",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": "#masthead",
+            "html": "<header class=\"hdr\" id=\"masthead\">",
+            "msg": "The landmark must have a unique aria-label, aria-labelledby, or title to make landmarks distinguishable"
+          }
+        ],
+        "count": 1
+      },
+      {
+        "id": "region",
+        "impact": "moderate",
+        "help": "All page content should be contained by landmarks",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": ".wa-float",
+            "html": "<a class=\"wa-float\" href=\"https://wa.me/5511983148774?text=Ol%C3%A1!%20Atuo%20no%20agroneg%C3%B3cio%20e%20quero%20saber%20mais%20sobre%20a%20contabilidade%20da%",
+            "msg": "Some page content is not contained by landmarks"
+          }
+        ],
+        "count": 1
+      }
+    ],
+    "incomplete": [
+      {
+        "id": "color-contrast",
+        "count": 95
+      }
+    ],
+    "passes": 50
+  },
+  {
+    "page": "/contato/",
+    "mode": "mobile",
+    "violations": [
+      {
+        "id": "heading-order",
+        "impact": "moderate",
+        "help": "Heading levels should only increase by one",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": ".fcard > h3",
+            "html": "<h3>Solicite um diagnóstico</h3>",
+            "msg": "Heading order invalid"
+          }
+        ],
+        "count": 1
+      },
+      {
+        "id": "landmark-no-duplicate-banner",
+        "impact": "moderate",
+        "help": "Document should not have more than one banner landmark",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": "#masthead",
+            "html": "<header class=\"hdr\" id=\"masthead\">",
+            "msg": "Document has more than one banner landmark"
+          }
+        ],
+        "count": 1
+      },
+      {
+        "id": "landmark-unique",
+        "impact": "moderate",
+        "help": "Landmarks should have a unique role or role/label/title (i.e. accessible name) combination",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": "#masthead",
+            "html": "<header class=\"hdr\" id=\"masthead\">",
+            "msg": "The landmark must have a unique aria-label, aria-labelledby, or title to make landmarks distinguishable"
+          }
+        ],
+        "count": 1
+      },
+      {
+        "id": "region",
+        "impact": "moderate",
+        "help": "All page content should be contained by landmarks",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": ".wa-float",
+            "html": "<a class=\"wa-float\" href=\"https://wa.me/5511983148774?text=Ol%C3%A1!%20Quero%20solicitar%20um%20diagn%C3%B3stico%20da%20Bear%20Finance%20para%20a%20minha%20empr",
+            "msg": "Some page content is not contained by landmarks"
+          }
+        ],
+        "count": 1
+      }
+    ],
+    "incomplete": [
+      {
+        "id": "color-contrast",
+        "count": 68
+      }
+    ],
+    "passes": 47
+  },
+  {
+    "page": "/parcerias/business-partner/",
+    "mode": "mobile",
+    "violations": [
+      {
+        "id": "heading-order",
+        "impact": "moderate",
+        "help": "Heading levels should only increase by one",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": ".pform-head > h3",
+            "html": "<h3>Quero ser <strong>Business Partner</strong></h3>",
+            "msg": "Heading order invalid"
+          },
+          {
+            "target": ".who-box > h4",
+            "html": "<h4>Para quem é</h4>",
+            "msg": "Heading order invalid"
+          }
+        ],
+        "count": 2
+      },
+      {
+        "id": "landmark-no-duplicate-banner",
+        "impact": "moderate",
+        "help": "Document should not have more than one banner landmark",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": "#masthead",
+            "html": "<header class=\"hdr\" id=\"masthead\">",
+            "msg": "Document has more than one banner landmark"
+          }
+        ],
+        "count": 1
+      },
+      {
+        "id": "landmark-unique",
+        "impact": "moderate",
+        "help": "Landmarks should have a unique role or role/label/title (i.e. accessible name) combination",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": "#masthead",
+            "html": "<header class=\"hdr\" id=\"masthead\">",
+            "msg": "The landmark must have a unique aria-label, aria-labelledby, or title to make landmarks distinguishable"
+          }
+        ],
+        "count": 1
+      },
+      {
+        "id": "region",
+        "impact": "moderate",
+        "help": "All page content should be contained by landmarks",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": ".wa-float",
+            "html": "<a class=\"wa-float\" href=\"https://wa.me/5511915267749?text=Ol%C3%A1!%20Quero%20saber%20mais%20sobre%20o%20programa%20Business%20Partner%20da%20Bear%20Finance.\" ",
+            "msg": "Some page content is not contained by landmarks"
+          }
+        ],
+        "count": 1
+      }
+    ],
+    "incomplete": [
+      {
+        "id": "color-contrast",
+        "count": 118
+      }
+    ],
+    "passes": 46
+  },
+  {
+    "page": "/",
+    "mode": "desktop",
+    "violations": [
+      {
+        "id": "region",
+        "impact": "moderate",
+        "help": "All page content should be contained by landmarks",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": ".hero__in",
+            "html": "<div class=\"inner hero__in\">",
+            "msg": "Some page content is not contained by landmarks"
+          },
+          {
+            "target": ".curve__btn",
+            "html": "<a class=\"curve__btn\" href=\"#proposta\" aria-label=\"Rolar para o conteúdo\"><svg class=\"i\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7",
+            "msg": "Some page content is not contained by landmarks"
+          },
+          {
+            "target": ".wa-float",
+            "html": "<a class=\"wa-float\" href=\"https://wa.me/5511983148774?text=Ol%C3%A1!%20Quero%20solicitar%20um%20diagn%C3%B3stico%20da%20Bear%20Finance%20para%20a%20minha%20empr",
+            "msg": "Some page content is not contained by landmarks"
+          }
+        ],
+        "count": 3
+      },
+      {
+        "id": "target-size",
+        "impact": "serious",
+        "help": "All touch targets must be 24px large, or leave sufficient space",
+        "tags": [
+          "wcag22aa",
+          "wcag258"
+        ],
+        "nodes": [
+          {
+            "target": "button[aria-label=\"Ir para o segmento 1 de 8\"]",
+            "html": "<button type=\"button\" aria-label=\"Ir para o segmento 1 de 8\" aria-current=\"true\"></button>",
+            "msg": "Target has insufficient size (26px by 8px, should be at least 24px by 24px)"
+          },
+          {
+            "target": "button[aria-label=\"Ir para o segmento 2 de 8\"]",
+            "html": "<button type=\"button\" aria-label=\"Ir para o segmento 2 de 8\" aria-current=\"false\"></button>",
+            "msg": "Target has insufficient size (8px by 8px, should be at least 24px by 24px)"
+          },
+          {
+            "target": "button[aria-label=\"Ir para o segmento 3 de 8\"]",
+            "html": "<button type=\"button\" aria-label=\"Ir para o segmento 3 de 8\" aria-current=\"false\"></button>",
+            "msg": "Target has insufficient size (8px by 8px, should be at least 24px by 24px)"
+          },
+          {
+            "target": "button[aria-label=\"Ir para o segmento 4 de 8\"]",
+            "html": "<button type=\"button\" aria-label=\"Ir para o segmento 4 de 8\" aria-current=\"false\"></button>",
+            "msg": "Target has insufficient size (8px by 8px, should be at least 24px by 24px)"
+          },
+          {
+            "target": "button[aria-label=\"Ir para o segmento 5 de 8\"]",
+            "html": "<button type=\"button\" aria-label=\"Ir para o segmento 5 de 8\" aria-current=\"false\"></button>",
+            "msg": "Target has insufficient size (8px by 8px, should be at least 24px by 24px)"
+          },
+          {
+            "target": "button[aria-label=\"Ir para o segmento 6 de 8\"]",
+            "html": "<button type=\"button\" aria-label=\"Ir para o segmento 6 de 8\" aria-current=\"false\"></button>",
+            "msg": "Target has insufficient size (8px by 8px, should be at least 24px by 24px)"
+          }
+        ],
+        "count": 8
+      }
+    ],
+    "incomplete": [
+      {
+        "id": "aria-prohibited-attr",
+        "count": 2
+      },
+      {
+        "id": "color-contrast",
+        "count": 177
+      }
+    ],
+    "passes": 50
+  },
+  {
+    "page": "/atuacao/contabilidade/",
+    "mode": "desktop",
+    "violations": [
+      {
+        "id": "landmark-no-duplicate-banner",
+        "impact": "moderate",
+        "help": "Document should not have more than one banner landmark",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": "#masthead",
+            "html": "<header class=\"hdr\" id=\"masthead\">",
+            "msg": "Document has more than one banner landmark"
+          }
+        ],
+        "count": 1
+      },
+      {
+        "id": "landmark-unique",
+        "impact": "moderate",
+        "help": "Landmarks should have a unique role or role/label/title (i.e. accessible name) combination",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": "#masthead",
+            "html": "<header class=\"hdr\" id=\"masthead\">",
+            "msg": "The landmark must have a unique aria-label, aria-labelledby, or title to make landmarks distinguishable"
+          }
+        ],
+        "count": 1
+      },
+      {
+        "id": "region",
+        "impact": "moderate",
+        "help": "All page content should be contained by landmarks",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": ".curve__btn",
+            "html": "<a class=\"curve__btn\" href=\"#conteudo\" aria-label=\"Rolar para o conteúdo\"><svg class=\"i\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7",
+            "msg": "Some page content is not contained by landmarks"
+          },
+          {
+            "target": ".wa-float",
+            "html": "<a class=\"wa-float\" href=\"https://wa.me/5511983148774?text=Ol%C3%A1!%20Quero%20saber%20mais%20sobre%20a%20Contabilidade%20consultiva%20da%20Bear%20Finance%20par",
+            "msg": "Some page content is not contained by landmarks"
+          }
+        ],
+        "count": 2
+      }
+    ],
+    "incomplete": [
+      {
+        "id": "color-contrast",
+        "count": 101
+      }
+    ],
+    "passes": 47
+  },
+  {
+    "page": "/verticais/contabilidade-agronegocio/",
+    "mode": "desktop",
+    "violations": [
+      {
+        "id": "landmark-no-duplicate-banner",
+        "impact": "moderate",
+        "help": "Document should not have more than one banner landmark",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": "#masthead",
+            "html": "<header class=\"hdr\" id=\"masthead\">",
+            "msg": "Document has more than one banner landmark"
+          }
+        ],
+        "count": 1
+      },
+      {
+        "id": "landmark-unique",
+        "impact": "moderate",
+        "help": "Landmarks should have a unique role or role/label/title (i.e. accessible name) combination",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": "#masthead",
+            "html": "<header class=\"hdr\" id=\"masthead\">",
+            "msg": "The landmark must have a unique aria-label, aria-labelledby, or title to make landmarks distinguishable"
+          }
+        ],
+        "count": 1
+      },
+      {
+        "id": "region",
+        "impact": "moderate",
+        "help": "All page content should be contained by landmarks",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": ".wa-float",
+            "html": "<a class=\"wa-float\" href=\"https://wa.me/5511983148774?text=Ol%C3%A1!%20Atuo%20no%20agroneg%C3%B3cio%20e%20quero%20saber%20mais%20sobre%20a%20contabilidade%20da%",
+            "msg": "Some page content is not contained by landmarks"
+          }
+        ],
+        "count": 1
+      }
+    ],
+    "incomplete": [
+      {
+        "id": "color-contrast",
+        "count": 100
+      }
+    ],
+    "passes": 50
+  },
+  {
+    "page": "/contato/",
+    "mode": "desktop",
+    "violations": [
+      {
+        "id": "heading-order",
+        "impact": "moderate",
+        "help": "Heading levels should only increase by one",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": ".fcard > h3",
+            "html": "<h3>Solicite um diagnóstico</h3>",
+            "msg": "Heading order invalid"
+          }
+        ],
+        "count": 1
+      },
+      {
+        "id": "landmark-no-duplicate-banner",
+        "impact": "moderate",
+        "help": "Document should not have more than one banner landmark",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": "#masthead",
+            "html": "<header class=\"hdr\" id=\"masthead\">",
+            "msg": "Document has more than one banner landmark"
+          }
+        ],
+        "count": 1
+      },
+      {
+        "id": "landmark-unique",
+        "impact": "moderate",
+        "help": "Landmarks should have a unique role or role/label/title (i.e. accessible name) combination",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": "#masthead",
+            "html": "<header class=\"hdr\" id=\"masthead\">",
+            "msg": "The landmark must have a unique aria-label, aria-labelledby, or title to make landmarks distinguishable"
+          }
+        ],
+        "count": 1
+      },
+      {
+        "id": "region",
+        "impact": "moderate",
+        "help": "All page content should be contained by landmarks",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": ".wa-float",
+            "html": "<a class=\"wa-float\" href=\"https://wa.me/5511983148774?text=Ol%C3%A1!%20Quero%20solicitar%20um%20diagn%C3%B3stico%20da%20Bear%20Finance%20para%20a%20minha%20empr",
+            "msg": "Some page content is not contained by landmarks"
+          }
+        ],
+        "count": 1
+      }
+    ],
+    "incomplete": [
+      {
+        "id": "color-contrast",
+        "count": 73
+      }
+    ],
+    "passes": 47
+  },
+  {
+    "page": "/parcerias/business-partner/",
+    "mode": "desktop",
+    "violations": [
+      {
+        "id": "heading-order",
+        "impact": "moderate",
+        "help": "Heading levels should only increase by one",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": ".pform-head > h3",
+            "html": "<h3>Quero ser <strong>Business Partner</strong></h3>",
+            "msg": "Heading order invalid"
+          },
+          {
+            "target": ".who-box > h4",
+            "html": "<h4>Para quem é</h4>",
+            "msg": "Heading order invalid"
+          }
+        ],
+        "count": 2
+      },
+      {
+        "id": "landmark-no-duplicate-banner",
+        "impact": "moderate",
+        "help": "Document should not have more than one banner landmark",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": "#masthead",
+            "html": "<header class=\"hdr\" id=\"masthead\">",
+            "msg": "Document has more than one banner landmark"
+          }
+        ],
+        "count": 1
+      },
+      {
+        "id": "landmark-unique",
+        "impact": "moderate",
+        "help": "Landmarks should have a unique role or role/label/title (i.e. accessible name) combination",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": "#masthead",
+            "html": "<header class=\"hdr\" id=\"masthead\">",
+            "msg": "The landmark must have a unique aria-label, aria-labelledby, or title to make landmarks distinguishable"
+          }
+        ],
+        "count": 1
+      },
+      {
+        "id": "region",
+        "impact": "moderate",
+        "help": "All page content should be contained by landmarks",
+        "tags": [
+          "best-practice"
+        ],
+        "nodes": [
+          {
+            "target": ".wa-float",
+            "html": "<a class=\"wa-float\" href=\"https://wa.me/5511915267749?text=Ol%C3%A1!%20Quero%20saber%20mais%20sobre%20o%20programa%20Business%20Partner%20da%20Bear%20Finance.\" ",
+            "msg": "Some page content is not contained by landmarks"
+          }
+        ],
+        "count": 1
+      }
+    ],
+    "incomplete": [
+      {
+        "id": "color-contrast",
+        "count": 129
+      }
+    ],
+    "passes": 46
+  }
+]

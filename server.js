@@ -56,15 +56,15 @@ const TYPES = {
 };
 const COMPRESSIBLE = new Set([".html", ".css", ".js", ".mjs", ".json", ".map", ".webmanifest", ".xml", ".txt", ".svg"]);
 
-// Origens externas usadas pelo site gerado: Google Fonts, cdnjs (Font Awesome + Swiper),
+// Origens externas usadas pelo site gerado: Google Fonts (CSS + woff2) e YouTube (nocookie) para vídeos.
 // YouTube (youtube-nocookie + miniaturas) e o mapa incorporado do Google na página de contato.
 export const CSP = [
   "default-src 'self'",
-  "script-src 'self' https://cdnjs.cloudflare.com",
-  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com",
-  "font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:",
+  "script-src 'self'",
+  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+  "font-src 'self' https://fonts.gstatic.com data:",
   "img-src 'self' data: https://i.ytimg.com",
-  "frame-src https://www.youtube-nocookie.com https://www.google.com/maps https://www.google.com/maps/",
+  "frame-src https://www.youtube-nocookie.com",
   "connect-src 'self'",
   "object-src 'none'",
   "base-uri 'self'",

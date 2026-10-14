@@ -115,27 +115,51 @@
     } else { poster.classList.add("shake"); setTimeout(() => poster.classList.remove("shake"), 600); }
   }));
 
-  /* ---------- Swiper (carrosséis), carregado sob demanda ---------- */
-  const swipers = $$(".swiper");
-  if (swipers.length) {
-    const init = () => {
-      const Sw = window.Swiper;
-      if (!Sw) return;
-      const auto = (delay) => (reduceMotion ? false : { delay, disableOnInteraction: false, pauseOnMouseEnter: true });
-      if ($(".swiper-vertical")) new Sw(".swiper-vertical", { slidesPerView: 1.1, spaceBetween: 16, speed: 900, loop: true, autoplay: auto(5000), pagination: { el: ".vertical-pagination", clickable: true }, navigation: { nextEl: ".vertical-button-next", prevEl: ".vertical-button-prev" }, a11y: { prevSlideMessage: "Segmento anterior", nextSlideMessage: "Próximo segmento" }, breakpoints: { 640: { slidesPerView: 2, spaceBetween: 20 }, 992: { slidesPerView: 3, spaceBetween: 22 }, 1280: { slidesPerView: 3.5, spaceBetween: 24 } } });
-      if ($(".swiper-team")) new Sw(".swiper-team", { slidesPerView: 1, spaceBetween: 20, loop: true, autoplay: auto(5500), breakpoints: { 600: { slidesPerView: 2 }, 992: { slidesPerView: 3 } } });
+  /* ---------- mapa neural: scripts só em desktop com ponteiro fino (mobile vê a imagem estática) ---------- */
+  const mapEl = $("[data-brmap][data-src]");
+  if (mapEl && !reduceMotion && matchMedia("(hover: hover) and (pointer: fine) and (min-width: 768px)").matches) {
+    const loadMap = () => {
+      const g = document.createElement("script"); g.src = mapEl.dataset.geo;
+      g.onload = () => { const s = document.createElement("script"); s.src = mapEl.dataset.src; document.head.appendChild(s); };
+      g.onerror = () => console.warn("[brmap] malha indisponível; mapa estático mantido.");
+      document.head.appendChild(g);
     };
-    const load = () => {
-      if (window.Swiper) return init();
-      const css = document.createElement("link"); css.rel = "stylesheet"; css.href = "https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.1.4/swiper-bundle.min.css";
-      const js = document.createElement("script"); js.src = "https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.1.4/swiper-bundle.min.js"; js.onload = init; js.onerror = () => console.warn("[swiper] CDN indisponível; carrossel em modo de rolagem.");
-      document.head.append(css, js);
-    };
-    if ("IntersectionObserver" in window) {
-      const io = new IntersectionObserver((entries) => { if (entries.some((e) => e.isIntersecting)) { io.disconnect(); load(); } }, { rootMargin: "500px" });
-      swipers.forEach((s) => io.observe(s));
-    } else load();
+    if ("IntersectionObserver" in window) { const io = new IntersectionObserver((en) => { if (en.some((e) => e.isIntersecting)) { io.disconnect(); loadMap(); } }, { rootMargin: "700px" }); io.observe(mapEl); } else loadMap();
   }
+
+  /* ---------- carrossel (scroll-snap nativo, sem dependências) ---------- */
+  $$("[data-carousel]").forEach((c) => {
+    const track = $(".carousel__track", c), items = [...track.children], dots = $(".carousel__dots", c);
+    const wrap = c.parentElement;
+    const prev = $("[data-carousel-prev]", wrap), next = $("[data-carousel-next]", wrap);
+    if (!items.length) return;
+    const behavior = reduceMotion ? "auto" : "smooth";
+    const left = (it) => it.offsetLeft - track.offsetLeft;
+    const maxX = () => track.scrollWidth - track.clientWidth - 2;
+    const current = () => { const x = track.scrollLeft; let idx = 0, best = Infinity; items.forEach((it, i) => { const d = Math.abs(left(it) - x); if (d < best) { best = d; idx = i; } }); return idx; };
+    const goTo = (i) => track.scrollTo({ left: left(items[Math.max(0, Math.min(items.length - 1, i))]), behavior });
+    if (prev) prev.addEventListener("click", () => goTo(current() - 1));
+    if (next) next.addEventListener("click", () => goTo(current() + 1));
+    if (dots) items.forEach((it, i) => { const b = document.createElement("button"); b.type = "button"; b.setAttribute("aria-label", `Ir para o segmento ${i + 1} de ${items.length}`); b.addEventListener("click", () => goTo(i)); dots.appendChild(b); });
+    const update = () => {
+      const idx = current(), x = track.scrollLeft;
+      if (dots) [...dots.children].forEach((b, i) => b.setAttribute("aria-current", String(i === idx)));
+      if (prev) prev.toggleAttribute("disabled", x <= 2);
+      if (next) next.toggleAttribute("disabled", x >= maxX());
+    };
+    let raf = 0;
+    track.addEventListener("scroll", () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; update(); }); }, { passive: true });
+    addEventListener("resize", update);
+    track.addEventListener("keydown", (e) => { if (e.key === "ArrowRight") { e.preventDefault(); goTo(current() + 1); } if (e.key === "ArrowLeft") { e.preventDefault(); goTo(current() - 1); } });
+    update();
+    if (!reduceMotion) {
+      let paused = false, inView = false;
+      const stop = () => { paused = true; };
+      ["pointerenter", "focusin", "touchstart"].forEach((ev) => c.addEventListener(ev, stop, { passive: true }));
+      if ("IntersectionObserver" in window) new IntersectionObserver(([e]) => { inView = e.isIntersecting; }).observe(c);
+      setInterval(() => { if (paused || !inView || document.hidden) return; track.scrollLeft >= maxX() ? goTo(0) : goTo(current() + 1); }, 5000);
+    }
+  });
 
   /* ---------- filtro de conteúdo ---------- */
   $$(".filters button[data-filter]").forEach((btn) => btn.addEventListener("click", () => {

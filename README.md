@@ -53,4 +53,4 @@ limita envios por IP e por e-mail, grava em `data/*.jsonl` e encaminha para `LEA
 
 ## Dependências externas (CDN)
 
-Google Fonts (Plus Jakarta Sans) e Swiper 11 (carregado sob demanda; sem CDN o carrossel vira rolagem horizontal). Font Awesome foi removido.
+Apenas Google Fonts (Plus Jakarta Sans). Font Awesome e Swiper foram removidos (ícones inline e carrossel nativo com scroll-snap).

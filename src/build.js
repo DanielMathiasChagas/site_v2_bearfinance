@@ -61,6 +61,7 @@ const segOf = (name) => D.verticals.find((v) => v.name === name);
 const PLAT_ART = art("tech-plataforma.svg");
 const HERO_ART = art("hero-neural.svg");
 const CTA_ART = art("cta-banner.svg");
+const OG_URL = S.url + img(has("img/og-image.jpg") ? "og-image.jpg" : "og-image.png");
 // pôsteres de vídeo por página (variados, para não repetir a mesma arte)
 const POSTER = { home: HERO_ART, sobre: art("svc-estruturacoes.svg"), cases: art("seg-industria.svg"), contato: art("svc-contabilidade.svg"), parcerias: art("svc-bpo-financeiro.svg"), plataforma: PLAT_ART, esg: art("seg-energia.svg"), verticais: art("seg-agronegocio.svg"), servicos: PLAT_ART };
 const raster = (base) => (has(`img/${base}.webp`) ? img(`${base}.webp`) : img(`${base}.jpg`));
@@ -68,9 +69,9 @@ const raster = (base) => (has(`img/${base}.webp`) ? img(`${base}.webp`) : img(`$
 const ORG_LD = {
   "@context": "https://schema.org", "@type": ["AccountingService", "Organization"], "@id": `${S.url}/#org`,
   name: S.name, url: S.url, logo: S.url + img("URSO_GEOMETRICO_PURPLE.png"), description: strip(S.description || S.tagline),
-  email: S.email, telephone: S.phone, areaServed: "BR",
+  email: S.email, telephone: "+" + WA_NUM, areaServed: "BR",
   address: { "@type": "PostalAddress", streetAddress: "Rua Riachuelo, 231 – 4º andar", addressLocality: "São Paulo", addressRegion: "SP", postalCode: "01007-000", addressCountry: "BR" },
-  sameAs: [S.linkedin, S.instagram, S.youtube].filter(Boolean),
+  ...(S.socialConfirmed ? { sameAs: [S.linkedin, S.instagram, S.youtube].filter(Boolean) } : {}), // perfis sociais entram no JSON-LD só depois de confirmados
 };
 const breadcrumbLd = (items) => ({ "@context": "https://schema.org", "@type": "BreadcrumbList", itemListElement: [["Início", "/"], ...items].map(([t, h], i) => ({ "@type": "ListItem", position: i + 1, name: strip(t), ...(h ? { item: S.url + h } : {}) })) });
 const faqLd = (items) => ({ "@context": "https://schema.org", "@type": "FAQPage", mainEntity: items.map(([q, a]) => ({ "@type": "Question", name: strip(q), acceptedAnswer: { "@type": "Answer", text: strip(a) } })) });
@@ -78,7 +79,7 @@ const faqLd = (items) => ({ "@context": "https://schema.org", "@type": "FAQPage"
 /* =====================================================================
    LAYOUT
    ===================================================================== */
-const brand = () => `<a class="brand" href="/" aria-label="${esc(S.name)} — página inicial"><img src="${img("URSO_GEOMETRICO_PURPLE.png")}" alt="" width="44" height="44"><span>BEAR FINANCE<small>Inteligência contábil</small></span></a>`;
+const brand = () => `<a class="brand" href="/"><img src="${has("img/URSO_GEOMETRICO_PURPLE.webp") ? img("URSO_GEOMETRICO_PURPLE.webp") : img("URSO_GEOMETRICO_PURPLE.png")}" alt="" width="44" height="44" decoding="async"><span>BEAR FINANCE<small>Inteligência contábil</small></span></a>`;
 const social = () => [["linkedin", S.linkedin, "LinkedIn"], ["instagram", S.instagram, "Instagram"], ["youtube", S.youtube, "YouTube"], ["whatsapp", wa(WA_DEFAULT), "WhatsApp"]].filter(([, h]) => h).map(([i, h, l]) => `<li><a href="${h}" target="_blank" rel="noopener" aria-label="${l}">${ico(i)}</a></li>`).join("");
 
 const NAV = () => [
@@ -150,10 +151,9 @@ function footer(waHref) {
     <p class="foot__dmc">Parte do ecossistema ${S.dmcUrl ? `<a href="${S.dmcUrl}" target="_blank" rel="noopener">${S.dmcName}</a>` : `<strong>${S.dmcName || "Complexo DMC"}</strong>`}</p>
     <nav aria-label="Políticas"><a href="/privacidade/">Privacidade</a><a href="/privacidade/#cookies">Cookies</a></nav>
   </div>
-</footer>
-<a class="totop" href="#top" aria-label="Voltar ao topo">${ico("chevron-up")}</a>
+<div class="foot__floats"><a class="totop" href="#top" aria-label="Voltar ao topo">${ico("chevron-up")}</a>
 <a class="wa-float" href="${waHref}" target="_blank" rel="noopener" aria-label="Falar no WhatsApp" data-track="whatsapp_click">${ico("whatsapp")}</a>
-<div class="cookie is-light" hidden role="region" aria-label="Aviso de cookies"><p><strong>Cookies.</strong> Usamos cookies essenciais para o site funcionar e, se você permitir, de desempenho para melhorá-lo. Veja a <a href="/privacidade/#cookies">Política de Cookies</a>.</p><div class="cookie__btns"><button class="btn btn--sm btn--dark" type="button" data-cookie="accept">Aceitar</button><button class="btn btn--sm btn--outline" type="button" data-cookie="reject">Só essenciais</button></div></div>`;
+<div class="cookie is-light" hidden role="region" aria-label="Aviso de cookies"><p><strong>Cookies.</strong> Usamos cookies essenciais para o site funcionar e, se você permitir, de desempenho para melhorá-lo. Veja a <a href="/privacidade/#cookies">Política de Cookies</a>.</p><div class="cookie__btns"><button class="btn btn--sm btn--dark" type="button" data-cookie="accept">Aceitar</button><button class="btn btn--sm btn--outline" type="button" data-cookie="reject">Só essenciais</button></div></div></div>`;
 }
 
 function page({ key = "", title, description, active = "", bodyClass = "", body, path = "/", jsonld = [], crumbs = null, waHref = wa(WA_DEFAULT), ogType = "website", extraHead = "", extraScripts = "", noindex = false }) {
@@ -163,6 +163,20 @@ function page({ key = "", title, description, active = "", bodyClass = "", body,
   const ogImage = S.url + (hasOg ? img(ogFile) : img("URSO_GEOMETRICO_PURPLE.png"));
   const favSvg = art("favicon.svg");
   const apple = has("img/apple-touch-icon.png") ? "/assets/img/apple-touch-icon.png" : img("URSO_GEOMETRICO_PURPLE.png");
+  const favPng = has("img/icon-192.png") ? "/assets/img/icon-192.png" : img("URSO_GEOMETRICO_PURPLE.png"); // PNG leve (13 KB) para navegadores sem favicon SVG
+  const favSizes = favPng.endsWith("icon-192.png") ? " sizes=\"192x192\"" : "";
+  const ogAlt = `${S.name} — ${strip(S.tagline)}`;
+  // Fonte self-hosted (Plus Jakarta Sans variável, SIL OFL): tira o CSS bloqueante de terceiro do caminho crítico e antecipa o swap.
+  // Se os arquivos não existirem, volta para o Google Fonts.
+  const fontLatin = has("fonts/plus-jakarta-sans-latin.woff2") ? "/assets/fonts/plus-jakarta-sans-latin.woff2?v=1" : "";
+  const fontLatinExt = has("fonts/plus-jakarta-sans-latin-ext.woff2") ? "/assets/fonts/plus-jakarta-sans-latin-ext.woff2?v=1" : "";
+  const fontFace = (u, range) => `@font-face{font-family:"Plus Jakarta Sans";font-style:normal;font-weight:300 800;font-display:swap;src:url(${u}) format("woff2");unicode-range:${range}}`;
+  const fontHead = fontLatin
+    ? `<link rel="preload" href="${fontLatin}" as="font" type="font/woff2" crossorigin>
+<style>${fontFace(fontLatin, "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD")}${fontLatinExt ? fontFace(fontLatinExt, "U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C4,U+2113,U+2C60-2C7F,U+A720-A7FF") : ""}</style>`
+    : `<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap">`;
   const ld = [ORG_LD, ...(crumbs ? [breadcrumbLd(crumbs)] : []), ...jsonld];
   return `<!doctype html>
 <html lang="pt-BR">
@@ -182,17 +196,18 @@ function page({ key = "", title, description, active = "", bodyClass = "", body,
 <meta property="og:image" content="${ogImage}">
 <meta property="og:image:width" content="${hasOg ? 1200 : 500}">
 <meta property="og:image:height" content="${hasOg ? 630 : 500}">
+<meta property="og:image:type" content="${/\.jpe?g$/i.test(ogImage) ? "image/jpeg" : "image/png"}">
+<meta property="og:image:alt" content="${esc(ogAlt)}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="${esc(title)}">
 <meta name="twitter:description" content="${esc(description)}">
 <meta name="twitter:image" content="${ogImage}">
+<meta name="twitter:image:alt" content="${esc(ogAlt)}">
 <meta name="theme-color" content="#07050d">
 ${favSvg ? `<link rel="icon" href="${favSvg}" type="image/svg+xml">` : ""}
-<link rel="icon" href="${img("URSO_GEOMETRICO_PURPLE.png")}" type="image/png">
+<link rel="icon" href="${favPng}" type="image/png"${favSizes}>
 <link rel="apple-touch-icon" href="${apple}">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap">
+${fontHead}
 <link rel="stylesheet" href="/assets/css/site.css?v=${VER.css}">
 ${extraHead}
 ${ld.map((o) => `<script type="application/ld+json">${JSON.stringify(o)}</script>`).join("\n")}
@@ -201,9 +216,9 @@ ${ld.map((o) => `<script type="application/ld+json">${JSON.stringify(o)}</script
 <a class="skip" href="#main">Ir para o conteúdo</a>
 <span id="top"></span>
 ${header(active)}
-<div id="content" class="site-content">
-${body}
-</div>
+<main id="main" class="site-main">
+${body.replace('<main id="main" class="site-main">', "").replace("</main>", "")}
+</main>
 ${footer(waHref)}
 <script src="/assets/js/site.js?v=${VER.js}" defer></script>
 ${extraScripts}
@@ -264,11 +279,11 @@ const platformTeaser = () => `
   <div class="teaser__art reveal">${PLAT_ART ? `<img src="${PLAT_ART}" alt="Ilustração da Plataforma Bear: painéis financeiros conectados" width="1200" height="900" loading="lazy" decoding="async">` : media(raster("SISTEMA"), "Ilustração da Plataforma Bear", { ratio: "4/5", cls: "media--shadow", w: 1024, h: 1536 })}</div>
 </div></section>`;
 
-function diagForm({ servico = "", segmento = "", waText = "", title = "Solicite um diagnóstico", intro = "Preencha os dados. Um especialista do seu setor analisa o cenário e retorna com os próximos passos." } = {}) {
+function diagForm({ servico = "", segmento = "", waText = "", level = 3, title = "Solicite um diagnóstico", intro = "Preencha os dados. Um especialista do seu setor analisa o cenário e retorna com os próximos passos." } = {}) {
   const opt = (list, sel) => `<option value="">Selecione</option>` + list.map((o) => `<option${o === sel ? " selected" : ""}>${o}</option>`).join("");
   return `
 <div class="fcard">
-  <h3>${title}</h3><p>${intro}</p>
+  <h${level}>${title}</h${level}><p>${intro}</p>
   <form class="form" id="form-diagnostico" data-api="/api/contato" data-form="diagnostico" data-wa="${wa(waText || WA_DEFAULT)}" novalidate>
     <input type="hidden" name="origem" value=""><input type="hidden" name="ts" value="">
     <div class="form__grid">
@@ -317,13 +332,13 @@ function brazilMap() {
 </svg>`;
 }
 const neuralMap = () => `
-<div class="br-neural" data-brmap data-focus="SP">
+<div class="br-neural" data-brmap data-focus="SP"${has("js/brmap.js") ? ` data-geo="/assets/js/brazil-geo.js?v=${VER.geo}" data-src="/assets/js/brmap.js?v=${VER.brjs}"` : ""}>
   <canvas class="br-neural__canvas" aria-hidden="true"></canvas>
-  <div class="br-neural__fallback">${brazilMap()}</div>
+  <div class="br-neural__fallback">${art("brasil-presenca.svg") ? `<img src="${art("brasil-presenca.svg")}" alt="Mapa do Brasil com sede em São Paulo e conexões digitais com todas as capitais" width="900" height="900" loading="lazy" decoding="async">` : brazilMap()}</div>
   <div class="br-neural__label" aria-hidden="true"><strong>São Paulo</strong><span>Sede</span></div>
 </div>`;
 const MAP_HEAD = has("css/brmap.css") ? `<link rel="stylesheet" href="/assets/css/brmap.css?v=${VER.brcss}">` : "";
-const MAP_SCRIPTS = has("js/brmap.js") ? `<script src="/assets/js/brazil-geo.js?v=${VER.geo}" defer></script>\n<script src="/assets/js/brmap.js?v=${VER.brjs}" defer></script>` : "";
+const MAP_SCRIPTS = ""; // brazil-geo.js + brmap.js são injetados pelo site.js só em desktop com ponteiro fino (mobile usa a imagem estática)
 
 const phead = ({ crumbs, eyebrow = "", h1, p = "", actions = "", art: a = "", side = "", cls = "", list = [], extra = "" }) => `
 <header class="phead${cls ? " " + cls : ""}">
@@ -347,7 +362,7 @@ const postCard = (p) => `
 </article>`;
 
 const vcard = (v, i) => `
-<a class="vcard" href="/verticais/${v.slug}/" aria-label="${esc(v.name)}: ${esc(v.short)}">
+<a class="vcard" href="/verticais/${v.slug}/">
   <img src="${segImg(v)}" alt="" width="1200" height="800" loading="lazy" decoding="async">
   <span class="vcard__n" aria-hidden="true">${String(i + 1).padStart(2, "0")}</span>
   <span class="vcard__in"><span class="vcard__ico">${ico(v.icon)}</span><h3>${v.name}</h3><p>${v.short}</p><span class="link">Conheça mais ${ico("arrow-right")}</span></span>
@@ -400,8 +415,11 @@ ${curve("#proposta")}
   <section id="segmentos" class="sec sec--light">
     <div class="inner">${sectionHead({ eyebrow: SEGI.eyebrow, h2: SEGI.h2, p: SEGI.p, two: true })}</div>
     <div class="vwrap">
-      <div class="swiper swiper-vertical"><div class="swiper-wrapper">${D.verticals.map((v, i) => `<div class="swiper-slide">${vcard(v, i)}</div>`).join("")}</div><div class="swiper-pagination vertical-pagination"></div></div>
-      <button class="vnav vnav--prev vertical-button-prev" type="button" aria-label="Segmento anterior">${ico("arrow-left")}</button><button class="vnav vnav--next vertical-button-next" type="button" aria-label="Próximo segmento">${ico("arrow-right")}</button>
+      <div class="carousel" data-carousel>
+        <div class="carousel__track" tabindex="0" aria-label="Segmentos atendidos (use as setas para navegar)">${D.verticals.map((v, i) => `<div class="carousel__item">${vcard(v, i)}</div>`).join("")}</div>
+        <div class="carousel__dots" aria-label="Posição do carrossel"></div>
+      </div>
+      <button class="vnav vnav--prev" type="button" data-carousel-prev aria-label="Segmento anterior">${ico("arrow-left")}</button><button class="vnav vnav--next" type="button" data-carousel-next aria-label="Próximo segmento">${ico("arrow-right")}</button>
     </div>
   </section>
 
@@ -463,7 +481,7 @@ function servicesIndex() {
 ${phead({ crumbs: [["Soluções"]], eyebrow: "Soluções", h1: "Soluções contábeis e empresariais para <strong>cada desafio</strong> do seu negócio", p: "Escolha por onde começar. Cada serviço funciona sozinho e se integra aos demais dentro da Plataforma Bear.", actions: ctaPair(WA_DEFAULT), art: HERO_ART })}
 ${curve("#lista", { to: "soft" })}
 <main id="main" class="site-main">
-  <section id="lista" class="sec sec--soft pt0"><div class="inner">${grid(D.services.map(svcCard), "svc-grid")}</div></section>
+  <section id="lista" class="sec sec--soft pt0"><div class="inner"><h2 class="sr-only">Nossas soluções</h2>${grid(D.services.map(svcCard), "svc-grid")}</div></section>
   ${videoSection(D.videos.home, "Veja a Bear <strong>em ação</strong>", "Como entregamos contabilidade, finanças e tributos em uma única operação integrada.", { poster: POSTER.servicos || img("ph-09.svg") })}
   <section class="sec sec--light"><div class="inner">${sectionHead({ eyebrow: METHOD.eyebrow, h2: METHOD.h2, p: METHOD.p, two: true })}${stepsBlock(METHOD.steps)}</div></section>
   ${erpSection()}
@@ -511,7 +529,7 @@ function verticalsIndex() {
   const body = `
 ${phead({ crumbs: [["Segmentos"]], eyebrow: "Segmentos", h1: SEGI.h2, p: SEGI.p, actions: ctaPair(WA_DEFAULT), art: HERO_ART })}
 <main id="main" class="site-main">
-  <section class="sec sec--light"><div class="inner">${grid(D.verticals.map(vcard), "vgrid")}</div></section>
+  <section class="sec sec--light"><div class="inner"><h2 class="sr-only">Segmentos atendidos</h2>${grid(D.verticals.map(vcard), "vgrid")}</div></section>
   ${videoSection(D.videos.cases, "Conhecimento <strong>setorial</strong>", "Como nossos times se especializam por vertical para entregar mais do que conformidade.", { poster: POSTER.verticais || img("ph-06.svg") })}
   ${conversion()}
 </main>`;
@@ -612,7 +630,7 @@ function casesPage() {
   const body = `
 ${phead({ crumbs: [["Casos de uso"]], eyebrow: C.intro.eyebrow, h1: C.intro.h2, p: C.intro.p, art: HERO_ART })}
 <main id="main" class="site-main">
-  <section class="sec sec--light"><div class="inner">${grid(C.items.map((c) => `<article class="case"><span class="case__seg">${c.segment}</span><h3>${c.title}</h3><dl><div><dt>Situação</dt><dd>${c.challenge}</dd></div><div><dt>Como atuamos</dt><dd>${c.approach}</dd></div></dl><ul class="checks">${c.deliverables.map((d) => `<li>${d}</li>`).join("")}</ul><a class="link" href="/verticais/${segOf(c.segment)?.slug || ""}/">Ver o segmento ${ico("arrow-right")}</a></article>`))}</div></section>
+  <section class="sec sec--light"><div class="inner"><h2 class="sr-only">Cenários de atuação</h2>${grid(C.items.map((c) => `<article class="case"><span class="case__seg">${c.segment}</span><h3>${c.title}</h3><dl><div><dt>Situação</dt><dd>${c.challenge}</dd></div><div><dt>Como atuamos</dt><dd>${c.approach}</dd></div></dl><ul class="checks">${c.deliverables.map((d) => `<li>${d}</li>`).join("")}</ul><a class="link" href="/verticais/${segOf(c.segment)?.slug || ""}/">Ver o segmento ${ico("arrow-right")}</a></article>`))}</div></section>
   ${videoSection(D.videos.cases, "Como atuamos <strong>por setor</strong>", "Veja como organizamos times, rotinas e tecnologia para cada mercado.", { poster: POSTER.cases || img("ph-02.svg") })}
   ${conversion()}
 </main>`;
@@ -646,7 +664,7 @@ function contact() {
 ${phead({ crumbs: [["Contato"]], eyebrow: "Contato", h1: "Fale com a <strong>Bear</strong>", p: "Diagnóstico sem custo, WhatsApp e e-mail. Escolha o canal; a resposta vem de um especialista do seu setor.", cls: "phead--short" })}
 <main id="main" class="site-main">
   <section id="diagnostico" class="sec sec--dark conv"><div class="inner conv__in">
-    <div class="conv__form reveal">${diagForm()}</div>
+    <div class="conv__form reveal">${diagForm({ level: 2 })}</div>
     <div class="conv__copy reveal">
       <p class="eyebrow">Canais diretos</p>
       <ul class="contact-list">
@@ -673,7 +691,7 @@ function blog() {
 ${phead({ crumbs: [["Conteúdo"]], eyebrow: "Conteúdo", h1: "Inteligência contábil <strong>para decidir</strong>", p: "Reforma Tributária, gestão financeira, folha e estruturação societária, explicados para quem toma decisão.", cls: "phead--short" })}
 <main id="main" class="site-main">
   <section class="sec sec--light"><div class="inner">
-    <div class="filters reveal" role="group" aria-label="Filtrar por categoria"><button type="button" data-filter="all" aria-pressed="true">Todas</button>${cats.map((c) => `<button type="button" data-filter="${esc(c)}" aria-pressed="false">${c}</button>`).join("")}</div>
+    <h2 class="sr-only">Artigos</h2><div class="filters reveal" role="group" aria-label="Filtrar por categoria"><button type="button" data-filter="all" aria-pressed="true">Todas</button>${cats.map((c) => `<button type="button" data-filter="${esc(c)}" aria-pressed="false">${c}</button>`).join("")}</div>
     ${grid(D.posts.map(postCard))}
   </div></section>
   ${ctaBand("Receba os próximos artigos <strong>no seu e-mail</strong>.", { btn: "Assinar a newsletter", href: "#newsletter" })}
@@ -690,12 +708,12 @@ ${phead({ crumbs: [["Conteúdo", "/conteudo/"], [p.cat]], h1: p.title, cls: "phe
   <section class="sec sec--light"><div class="inner split">
     <article class="article"><p class="lead">${p.excerpt}</p>${html}<p style="margin-top:var(--s-7)"><a class="link" href="/conteudo/">${ico("arrow-left")} Voltar para conteúdos</a></p></article>
     <aside class="aside">
-      <div class="aside__box"><h4>Leia também</h4><ul>${D.posts.filter((o) => o !== p).slice(0, 4).map((o) => `<li><a href="/conteudo/${o.slug}/">${o.title}</a></li>`).join("")}</ul></div>
-      <div class="aside__box aside__box--dark"><h4>Fale com um especialista</h4><p class="small">Tire dúvidas sobre este tema com o nosso time.</p><a class="btn btn--sm" href="/contato/#diagnostico">Solicitar diagnóstico</a></div>
+      <div class="aside__box"><h3>Leia também</h3><ul>${D.posts.filter((o) => o !== p).slice(0, 4).map((o) => `<li><a href="/conteudo/${o.slug}/">${o.title}</a></li>`).join("")}</ul></div>
+      <div class="aside__box aside__box--dark"><h3>Fale com um especialista</h3><p class="small">Tire dúvidas sobre este tema com o nosso time.</p><a class="btn btn--sm" href="/contato/#diagnostico">Solicitar diagnóstico</a></div>
     </aside>
   </div></section>
 </main>`;
-  return page({ key: "post", title: p.title.length > 46 ? p.title : `${p.title} | ${S.name}`, description: strip(p.excerpt), active: "conteudo", bodyClass: "single-post", body, path: `/conteudo/${p.slug}/`, ogType: "article", crumbs: [["Conteúdo", "/conteudo/"], [p.title]], jsonld: [{ "@context": "https://schema.org", "@type": "Article", headline: p.title, description: strip(p.excerpt), datePublished: p.date, dateModified: p.date, mainEntityOfPage: url, author: { "@type": "Organization", name: S.name, url: S.url }, publisher: { "@id": `${S.url}/#org` } }] });
+  return page({ key: "post", title: p.title.length > 46 ? p.title : `${p.title} | ${S.name}`, description: strip(p.excerpt), active: "conteudo", bodyClass: "single-post", body, path: `/conteudo/${p.slug}/`, ogType: "article", crumbs: [["Conteúdo", "/conteudo/"], [p.title]], jsonld: [{ "@context": "https://schema.org", "@type": "Article", headline: p.title, description: strip(p.excerpt), datePublished: p.date, dateModified: p.date, mainEntityOfPage: url, image: OG_URL, author: { "@type": "Organization", name: S.name, url: S.url }, publisher: { "@id": `${S.url}/#org` } }] });
 }
 
 /* ---------- Parcerias ---------- */
@@ -716,7 +734,7 @@ function partnerForm(pr) {
 <div class="pform" id="form-parceria">
   <div class="pform-head">
     <span class="pform-tag">${ico("whatsapp")} Resposta rápida pelo WhatsApp</span>
-    <h3>${pr.form.title}</h3>
+    <h2>${pr.form.title}</h2>
     <div class="pform-progress" aria-hidden="true"><span></span></div>
     <ol class="pform-steps"><li class="on"><b>1</b>Seus dados</li><li><b>2</b>${pr.form.step2}</li></ol>
   </div>
@@ -788,7 +806,7 @@ ${phead({ crumbs: [["Parcerias", "/parcerias/"], [pr.name]], eyebrow: pr.tag, h1
   ${ctaBand(pr.call, { btn: "Quero participar", href: "#form-parceria" })}
   <section class="sec sec--light"><div class="inner split split--even">
     <div class="split__t h2-before reveal"><h2>Como <strong>funciona</strong></h2><ul class="checks lead">${pr.how.map((h) => `<li>${h}</li>`).join("")}</ul></div>
-    <div class="reveal"><div class="who-box"><h4>Para quem é</h4><ul class="tags">${pr.who.map((f) => `<li>${f}</li>`).join("")}</ul><p>${pr.lead}</p><a class="btn" href="#form-parceria">Quero ser ${pr.name}</a></div></div>
+    <div class="reveal"><div class="who-box"><h3>Para quem é</h3><ul class="tags">${pr.who.map((f) => `<li>${f}</li>`).join("")}</ul><p>${pr.lead}</p><a class="btn" href="#form-parceria">Quero ser ${pr.name}</a></div></div>
   </div></section>
   <section class="sec sec--soft"><div class="inner split split--even">
     <div class="split__t h2-before reveal"><h2>${pr.benefits.h2}</h2><p class="lead">${pr.benefits.p}</p><ul class="benefits">${pr.benefits.items.map((b) => `<li>${b}</li>`).join("")}</ul></div>
@@ -846,11 +864,11 @@ const pages = [
   ["contato", contact()], ["conteudo", blog()], ["atuacao", servicesIndex()], ["verticais", verticalsIndex()], ["privacidade", privacy()], ["404.html", notFound()],
   ...D.services.map((s) => [`atuacao/${s.slug}`, servicePage(s)]),
   ...D.verticals.map((v) => [`verticais/${v.slug}`, verticalPage(v)]),
-  ...D.posts.map((p) => [`conteudo/${p.slug}`, post(p)]),
+  ...D.posts.map((p) => [`conteudo/${p.slug}`, post(p), p.date]),
 ];
 for (const [p, html] of pages) await out(p, html);
 
-const urls = pages.filter(([p]) => !p.endsWith(".html")).map(([p]) => (p === "/" ? "/" : `/${p}/`));
-await writeFile(join(OUT, "sitemap.xml"), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((u) => `  <url><loc>${S.url}${u}</loc><lastmod>${TODAY}</lastmod></url>`).join("\n")}\n</urlset>\n`);
+const urls = pages.filter(([p]) => !p.endsWith(".html")).map(([p, , lm]) => [p === "/" ? "/" : `/${p}/`, lm || TODAY]);
+await writeFile(join(OUT, "sitemap.xml"), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map(([u, lm]) => `  <url><loc>${S.url}${u}</loc><lastmod>${lm}</lastmod></url>`).join("\n")}\n</urlset>\n`);
 await writeFile(join(OUT, "robots.txt"), `User-agent: *\nAllow: /\nSitemap: ${S.url}/sitemap.xml\n`);
 console.log(`✓ ${pages.length} páginas geradas em /public`);
