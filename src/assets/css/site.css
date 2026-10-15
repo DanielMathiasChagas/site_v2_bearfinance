@@ -155,8 +155,13 @@ hr { border: 0; border-top: 1px solid var(--line); margin: var(--s-6) 0; }
 .link:hover .i { transform: translateX(4px); }
 .is-dark .link, .sec--dark .link, .sec--deep .link { color: var(--violet-300); }
 .actions { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; margin-top: var(--s-6); }
-.actions .wa-inline { display: inline-flex; align-items: center; gap: 8px; color: #fff; font-weight: 600; }
-.actions .wa-inline .i { color: var(--wa); width: 22px; height: 22px; }
+.wa-inline { display: inline-flex; align-items: center; gap: 10px; height: 52px; padding: 0 22px 0 14px; border-radius: var(--r-pill); border: 1px solid rgba(37, 211, 102, .45); background: rgba(37, 211, 102, .08); color: #fff; font-weight: 600; font-size: 15px; line-height: 1; white-space: nowrap; transition: background .2s, border-color .2s, transform .2s var(--ease), box-shadow .25s var(--ease); }
+.wa-inline .i { color: var(--wa); width: 22px; height: 22px; flex: none; }
+.wa-inline:hover { background: rgba(37, 211, 102, .16); border-color: var(--wa); transform: translateY(-2px); box-shadow: 0 12px 30px -14px rgba(37, 211, 102, .6); }
+.actions .btn--lg + .wa-inline { height: 58px; padding: 0 26px 0 18px; font-size: 16px; }
+.sec--light .wa-inline, .sec--soft .wa-inline, .is-light .wa-inline { color: var(--ink-900); border-color: rgba(18, 140, 70, .45); background: rgba(37, 211, 102, .1); }
+.sec--light .wa-inline:hover, .sec--soft .wa-inline:hover, .is-light .wa-inline:hover { background: rgba(37, 211, 102, .2); }
+@media (max-width: 767px) { .actions .wa-inline { width: 100%; justify-content: center; } }
 @keyframes spin { to { rotate: 360deg; } }
 .i { width: 24px; height: 24px; flex: none; }
 @media (max-width: 480px) {
@@ -590,7 +595,7 @@ body.hide-ph .ph::after { display: none; }
 .band--quote .i { width: 36px; height: 36px; color: rgba(255, 255, 255, .5); margin: 0 auto 16px; }
 .band--cta { background: var(--bg-2); color: #fff; }
 .band--cta::before { content: ""; position: absolute; inset: 0; background: radial-gradient(700px 300px at 20% 50%, rgba(139, 92, 246, .3), transparent 70%); }
-.band--cta .inner { position: relative; display: grid; grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); gap: var(--s-6); align-items: center; }
+.band--cta .inner { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--s-7); align-items: center; }
 .band--cta p { font-size: clamp(22px, 2.4vw, 34px); font-weight: 300; line-height: 1.25; margin: 0; color: #fff; }
 .band--cta p strong { font-weight: 700; color: var(--violet-300); }
 .band--cta .actions { margin: 0; justify-content: flex-end; }
