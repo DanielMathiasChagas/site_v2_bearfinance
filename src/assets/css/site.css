@@ -251,6 +251,9 @@ body.is-scrolled .hdr { background: rgba(7, 5, 13, .84); -webkit-backdrop-filter
 @keyframes blink { 50% { opacity: 0; } }
 @media (max-width: 991px) { .hero { min-height: 0; padding-bottom: 90px; } .hero__art { right: -30%; width: 120vw; opacity: .5; top: 40%; } .hero__badges { margin-top: 44px; } }
 @media (max-width: 767px) { .hero__badges { gap: 10px 18px; font-size: 13px; } .hero .actions .btn { width: 100%; } }
+@media (max-width: 420px) { .hero .display { font-size: 32px; } .hero { padding-top: calc(var(--hdr) + 36px); padding-bottom: 72px; } }
+/* telas baixas (notebooks 1366×768): hero mais compacto para o CTA ficar na dobra com folga */
+@media (min-width: 992px) and (max-height: 820px) { .hero { min-height: 0; padding-top: calc(var(--hdr) + 28px); padding-bottom: 88px; } .hero .display { font-size: clamp(36px, 4vw, 54px); } .hero .lead { font-size: 17px; } .hero__badges { margin-top: 36px; padding-top: 20px; } }
 
 /* curva de transição */
 .curve { position: relative; height: 110px; margin-top: -1px; background: var(--surface-0); z-index: 2; }
