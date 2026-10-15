@@ -400,8 +400,8 @@ function home() {
       ${H.sub ? `<p class="lead">${H.sub}</p>` : ""}
       <div class="actions"><a class="btn btn--lg" href="${ctaHref}" data-track="cta_click" data-label="hero">${H.cta} ${ico("arrow-right")}</a><a class="btn btn--outline btn--lg" href="${H.cta2Href || "#servicos"}">${H.cta2 || "Conhecer soluções"}</a></div>
     </div>
-    <ul class="hero__badges" aria-label="Capacidades">${(H.badges || []).map((b) => `<li>${ico(b.icon)}<span>${b.text}</span></li>`).join("")}</ul>
   </div>
+  <div class="inner hero__foot"><ul class="hero__badges" aria-label="Capacidades">${(H.badges || []).map((b) => `<li>${ico(b.icon)}<span>${b.text}</span></li>`).join("")}</ul></div>
 </section>
 ${curve("#proposta")}
 <main id="main" class="site-main">
